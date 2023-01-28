@@ -1,0 +1,2 @@
+requests == 2.*
+splunk-sdk == 1.*

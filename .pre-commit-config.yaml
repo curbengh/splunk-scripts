@@ -1,0 +1,45 @@
+default_install_hook_types: [pre-push]
+repos:
+  - repo: local
+    hooks:
+      - id: standard-python-shebang
+        name: Standard python shebang
+        entry: sed
+        language: system
+        types: [python]
+        args: [
+            "-i", # modify in-place
+            "-E", # extended regex
+            "s|^#\\!.*|#\\!/usr/bin/env python|",
+          ]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v4.4.0"
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/PyCQA/isort
+    rev: "5.11.4"
+    hooks:
+      - id: isort
+        types: [python]
+        args: [
+            ".", # sort all Python files recursively
+          ]
+  - repo: https://github.com/psf/black
+    rev: 22.12.0
+    hooks:
+      - id: black
+  - repo: https://github.com/PyCQA/pylint
+    rev: "v2.15.10"
+    hooks:
+      - id: pylint
+        language: system
+        types: [python]
+        args: [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+          ]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v2.7.1"
+    hooks:
+      - id: prettier

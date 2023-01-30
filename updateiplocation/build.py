@@ -50,7 +50,8 @@ def exclusion(tarinfo):
     # exclude certain folders/files
     pathname = tarinfo.name
     if search(
-        r"/\.|\\\.|__pycache__|pyproject.toml|requirements-dev.txt|build.py", pathname
+        r"/\.|\\\.|__pycache__|pyproject.toml|requirements-dev.txt|build.py|maxmind-license.py",
+        pathname,
     ):
         return None
 

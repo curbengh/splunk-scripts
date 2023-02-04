@@ -7,6 +7,8 @@ A simple add-on to update iplocation database. I created this mostly to learn ab
 1. `python build.py`
 2. Install the output \*.tar.gz
 
+Compatible with Splunk 9.x. For Splunk 8.x, install "\*-splunk8.tar.gz" instead.
+
 ## [updateiplocation](./bin/updateiplocation.py)
 
 [`iplocation`](https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/Iplocation) free database located at "$SPLUNK_HOME/share/GeoLite2-City.mmdb" is only updated in each Splunk release. Run `| updateiplocation` as an alert to receive regular update, MaxMind updates GeoLite2 database twice weekly, Tuesday and Friday.

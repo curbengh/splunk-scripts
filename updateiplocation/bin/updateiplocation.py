@@ -28,13 +28,14 @@ SPLUNK_LOGIN = {
     "scheme": "https",
     "verify": False,
     "owner": "nobody",
-    "app": "updateiplocation",
+    "app": "app_name",
     "sharing": "app",
 }
 # Do not change this, see "maxmind-license.py"
 LICENSE_USERNAME = "maxmind"
 # Avoid replacing the bundled database "GeoLite2-City.mmdb"
 # Custom path needs to be specified in $SPLUNK_HOME/etc/system/local/limits.conf
+# See Cyber Code Library/splunk/server/system/limits.conf
 MMDB_PATH = path.join(environ.get("SPLUNK_HOME"), "share", "GeoLite2-City-latest.mmdb")
 
 
@@ -42,9 +43,34 @@ MMDB_PATH = path.join(environ.get("SPLUNK_HOME"), "share", "GeoLite2-City-latest
 class UpdateGeoIP(GeneratingCommand):
     """Defines a search command that generates event records"""
 
+    def __login(self):
+        """
+        Connect to the Splunk management port.
+        Return an authenticated {splunklib.client.Service} connection
+        """
+        try:
+            service = client.connect(
+                # https://community.splunk.com/t5/Building-for-the-Splunk-Platform/How-to-pass-credentials-within-custom-search-command-using/m-p/223714/highlight/true#M2905
+                token=self._metadata.searchinfo.session_key,
+                **SPLUNK_LOGIN,
+            )
+            return service
+        except ConnectionResetError as err:
+            # Splunk management port 8089 uses https by default and may not respond to http
+            raise err
+        except ConnectionRefusedError as err:
+            # Possible incorrect port. Splunk management port defaults to 8089
+            raise err
+        except AuthenticationError as err:
+            raise err
+        except SplunkHTTPError as err:
+            raise err
+        except gaierror as err:
+            raise err
+
     def __get_license(self):
         """Query credential storage. Return the {str} license key"""
-        service = self.service
+        service = self.__login()
         storage_passwords = service.storage_passwords
         for storage_password in storage_passwords.list():
             if storage_password.username == LICENSE_USERNAME:

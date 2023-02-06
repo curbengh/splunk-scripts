@@ -162,7 +162,7 @@ def add_license(service, license_key, validate=True, always_update=False):
             environ.get("SPLUNK_HOME", "$SPLUNK_HOME"),
             "etc",
             "apps",
-            "malware_filter",
+            "updateiplocation",
             "passwords.conf",
         )
         print(

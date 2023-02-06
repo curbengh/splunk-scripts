@@ -2,3 +2,6 @@
 []
 access = read : [ * ], write : [ admin, power, sc_admin ]
 export = system
+
+[searchbnf]
+export = system

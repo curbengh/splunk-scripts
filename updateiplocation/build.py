@@ -50,7 +50,7 @@ def exclusion(tarinfo):
     # exclude certain folders/files
     pathname = tarinfo.name
     if search(
-        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements|build\.py|maxmind-license\.py|tar\.gz",
+        r"/\.|\\\.|__pycache__|pyproject.toml|requirements-dev.txt|build.py|maxmind-license.py",
         pathname,
     ):
         return None
@@ -87,24 +87,3 @@ pkg_file = f"updateiplocation-{version()}.tar.gz"
 print(f"Creating {pkg_file}...")
 with tarfile.open(pkg_file, "w:gz") as tar:
     tar.add(".", filter=exclusion)
-
-# Splunk 8 workaround
-# Splunk scheduler may not run scheduled searches (alert/report) without this workaround
-commands_conf_path = path.join(
-    "default",
-    "commands.conf",
-)
-commands_conf = ConfigParser()
-commands_conf.read(commands_conf_path)
-commands_conf["default"]["chunked"] = "false"
-with open(commands_conf_path, "w") as f:
-    commands_conf.write(f)
-
-pkg_file_8 = f"updateiplocation-{version()}-splunk8.tar.gz"
-print(f"Creating {pkg_file_8}...")
-with tarfile.open(pkg_file_8, "w:gz") as tar:
-    tar.add(".", filter=exclusion)
-
-commands_conf["default"]["chunked"] = "true"
-with open(commands_conf_path, "w") as f:
-    commands_conf.write(f)

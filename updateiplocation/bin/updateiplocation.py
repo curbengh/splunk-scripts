@@ -28,7 +28,7 @@ SPLUNK_LOGIN = {
     "scheme": "https",
     "verify": False,
     "owner": "nobody",
-    "app": "app_name",
+    "app": "updateiplocation",
     "sharing": "app",
 }
 # Do not change this, see "maxmind-license.py"

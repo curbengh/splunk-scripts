@@ -32,7 +32,7 @@ NAMESPACE = {
 def main(**kwargs):
     """Main function"""
 
-    host = urlparse(kwargs.get("host", "http://localhost:8089"))
+    host = urlparse(kwargs.get("host", "https://localhost:8089"))
     verify = kwargs.get("verify", False)
     login_params = {
         "host": host.hostname or "localhost",

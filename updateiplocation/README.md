@@ -1,4 +1,4 @@
-# updateiplocation
+# Iplocation Database Update
 
 A simple add-on to update iplocation database. I created this mostly to learn about [credential storage](https://dev.splunk.com/enterprise/docs/developapps/manageknowledge/secretstorage/secretstoragepython). It's probably better to use [Auto Update MaxMind Database](https://splunkbase.splunk.com/app/5482) app instead, though I've never used it.
 
@@ -9,7 +9,9 @@ A simple add-on to update iplocation database. I created this mostly to learn ab
 
 ## [updateiplocation](./bin/updateiplocation.py)
 
-[`iplocation`](https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/Iplocation) free database located at "$SPLUNK_HOME/share/GeoLite2-City.mmdb" is only updated in each Splunk release. Run `| updateiplocation` as an alert to receive regular update, MaxMind updates GeoLite2 database twice weekly, Tuesday and Friday.
+[`iplocation`](https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/Iplocation) free database located at "$SPLUNK_HOME/share/GeoLite2-City.mmdb" is only updated in each Splunk release. Run `| updateiplocation` as an alert or report to receive regular update, MaxMind updates GeoLite2 database twice weekly, Tuesday and Friday.
+
+`updateiplocation` can only be executed within "Iplocation Database Update" app. When creating a new alert/report, make sure that app is selected, otherwise the script is not able to get the license key from the credential storage.
 
 It uses MaxMind license key from the credential storage located at "$SPLUNK_HOME/etc/apps/updateiplocation/local/passwords.conf". Run [maxmind-license.py](#naxmind-license) to query/add/update one.
 

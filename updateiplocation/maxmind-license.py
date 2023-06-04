@@ -229,13 +229,13 @@ def is_valid_license(license_key=""):
         else:
             print(err)
         return prompt_retry()
-    except RequestsConnectionError:
+    except RequestsConnectionError as err:
         print(err)
         return prompt_retry()
-    except Timeout:
+    except Timeout as err:
         print(err)
         return prompt_retry()
-    except RequestException:
+    except RequestException as err:
         print(err)
         return prompt_retry()
 

@@ -18,9 +18,8 @@ from splunklib.searchcommands import Configuration, GeneratingCommand, dispatch
 
 # Do not change this, see "maxmind-license.py"
 LICENSE_USERNAME = "maxmind"
-# Avoid replacing the bundled database "GeoLite2-City.mmdb"
-# Custom path needs to be specified in $SPLUNK_HOME/etc/system/local/limits.conf
-MMDB_PATH = path.join(environ.get("SPLUNK_HOME"), "share", "GeoLite2-City-latest.mmdb")
+
+MMDB_PATH = path.join(environ.get("SPLUNK_HOME"), "share")
 
 
 @Configuration()
@@ -41,6 +40,9 @@ class UpdateGeoIP(GeneratingCommand):
         """Return the {tarfile.TarInfo} mmdb file found in a gzip"""
         for tarinfo in members:
             if path.splitext(tarinfo.name)[1] == ".mmdb":
+                # Avoid replacing the default database "GeoLite2-City.mmdb"
+                # Custom path needs to be specified in $SPLUNK_HOME/etc/system/local/limits.conf
+                tarinfo.name = "GeoLite2-City-latest.mmdb"
                 return tarinfo
         raise FileNotFoundError(
             "Unable to locate any mmdb file in the downloaded gzip."
@@ -89,8 +91,10 @@ class UpdateGeoIP(GeneratingCommand):
         gzip_content = self.__download()
         with tarfile.open(fileobj=BytesIO(gzip_content), mode="r:gz") as tar:
             mmdb = self.__get_mmdb(tar)
-            mmdb.name = MMDB_PATH
-            tar.extract(mmdb)
+            filter_param = {}
+            if sys.version_info >= (3, 11, 4):
+                filter_param = {"filter": "data"}
+            tar.extract(mmdb, path=MMDB_PATH, **filter_param)
 
     def generate(self):
         self.update_mmdb()

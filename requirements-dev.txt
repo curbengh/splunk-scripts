@@ -1,5 +1,4 @@
 -r requirements.txt
-pylint == 2.*
-isort == 5.*
 pre-commit == 2.*
 black ~= 22.1
+ruff == 0.0.*

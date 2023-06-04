@@ -5,17 +5,13 @@
   "files.trimFinalNewlines": true,
   "python.formatting.provider": "none",
   "[python]": {
+    "editor.tabSize": 4,
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
-    "editor.tabSize": 4,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.fixAll": true,
+      "source.organizeImports.ruff": true
     }
-  },
-  "isort.args": ["--profile", "black"],
-  "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "editor.formatOnSave": true,

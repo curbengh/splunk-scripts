@@ -27,5 +27,8 @@ indent-after-paren = 4
 indent-string = "    "
 expected-line-ending-format="LF"
 
-[tool.isort]
-profile = "black"
+[tool.ruff]
+line-length = 115
+
+[tool.ruff.per-file-ignores]
+"updateiplocation/bin/updateiplocation.py" = ["E402"]

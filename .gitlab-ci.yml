@@ -6,11 +6,14 @@ variables:
 lint:
   stage: test
 
+  variables:
+    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
+
   cache:
     paths:
       - .cache/pip
       - .venv/
-      - .cache/pre-commit
+      - ${PRE_COMMIT_HOME}
 
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends git

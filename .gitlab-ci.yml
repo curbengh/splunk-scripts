@@ -12,6 +12,7 @@ lint:
       - .venv/
 
   before_script:
+    - apt-get install -y --no-install-recommends git
     - python --version
     - python -m venv .venv
     - source .venv/bin/activate

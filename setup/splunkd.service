@@ -7,11 +7,11 @@ Wants=network-online.target
 Type=simple
 Restart=always
 # Run chown as root
-ExecStartPre=+/bin/sh -c "chown -R splunk:splunk /opt/splunk"
+ExecStartPre=+chown -R splunk:splunk "/opt/splunk"
 # https://docs.splunk.com/Documentation/Splunk/latest/Installation/UpgradeonUNIX#Upgrade_and_accept_the_license_agreement_simultaneously
 ExecStart=/opt/splunk/bin/splunk _internal_launch_under_systemd --accept-license --answer-yes
 # https://www.freedesktop.org/software/systemd/man/systemd.service.html#id-1.9.8
-ExecStartPost=+-/bin/sh -c "chown -R splunk:splunk /sys/fs/cgroup/system.slice/%n"
+ExecStartPost=+-chown -R splunk:splunk "/sys/fs/cgroup/system.slice/%n"
 KillMode=mixed
 KillSignal=SIGINT
 TimeoutStopSec=360

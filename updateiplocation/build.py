@@ -5,7 +5,9 @@
 import tarfile
 from configparser import ConfigParser
 from os import environ, path
-from re import search, sub
+from pathlib import PurePath
+from posixpath import join as posixjoin
+from re import search
 from subprocess import check_call
 from sys import executable
 
@@ -50,19 +52,31 @@ def exclusion(tarinfo):
     # exclude certain folders/files
     pathname = tarinfo.name
     if search(
-        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements|build\.py|maxmind-license\.py",
+        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements|build\.py|maxmind-license\.py|\.tar\.gz|\.tgz",
         pathname,
     ):
         return None
 
-    # rename parent folder as "updateiplocation"
-    tarinfo.name = sub(r"^.", "updateiplocation", pathname)
+    app = PurePath(pathname).parts[0]
 
     # reset file stats
-    # based on https://splunkbase.splunk.com/app/833
-    tarinfo.uid = 1001
-    tarinfo.gid = 123
+    tarinfo.uid = 0
+    tarinfo.gid = 0
     tarinfo.uname = tarinfo.gname = ""
+    if tarinfo.isfile():
+        # remove execution permission
+        tarinfo.mode = 0o644
+
+        # except for scripts
+        # tarinfo uses posix (not nt)
+        if (
+            tarinfo.name.startswith(posixjoin(app, "bin"))
+            and path.splitext(tarinfo.name)[-1] == ".py"
+        ):
+            tarinfo.mode = 0o744
+    if tarinfo.isdir():
+        # remove write permission from group & world
+        tarinfo.mode = 0o755
 
     return tarinfo
 
@@ -85,4 +99,4 @@ check_call(
 pkg_file = f"updateiplocation-{version()}.tar.gz"
 print(f"Creating {pkg_file}...")
 with tarfile.open(pkg_file, "w:gz") as tar:
-    tar.add(".", filter=exclusion)
+    tar.add(".", filter=exclusion, arcname="updateiplocation")

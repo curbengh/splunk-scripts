@@ -38,7 +38,7 @@ Query/add/update MaxMind license key to the credential storage. A free GeoLite2 
 License key will be validated prior to addition if download.maxmind.com is reachable or `--skip-validate` is not specified.
 
 ```
-maxmind-license.py [--host] https://localhost:8089 [--check-key] [--skip-validate] [--update] [--delete]
+maxmind-license.py [--host] https://localhost:8089 [--verify] [--check-key] [--skip-validate] [--update] [--delete]
 ```
 
 Options:

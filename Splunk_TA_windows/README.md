@@ -7,15 +7,15 @@ Field extraction/transformation on output log of [`Get-WindowsUpdateLog`](https:
 ## Build
 
 ```
-build.py [--input] /path/to/splunk-add-on-for-vmware-esxi-logs_*.tgz [--cloud]
+build.py [--input] /path/to/splunk-add-on-for-microsoft-windows_*.tgz [--cloud]
 ```
 
 Options:
 
-- **input**: Path to Splunk app. (default: "splunk-add-on-for-vmware-esxi-logs\_\*.tgz" in the current directory)
+- **input**: Path to Splunk app. (default: "splunk-add-on-for-microsoft-windows\_\*.tgz" in the current directory)
 - **cloud**: Create Splunk Cloud-compatible app.
 
 Outputs:
 
-- Splunk_TA_esxilogs\_\*.tgz
-- custom-Splunk_TA_esxilogs\_\*.tgz (if `--cloud` is specified)
+- Splunk_TA_windows\_\*.tgz
+- custom-Splunk_TA_windows\_\*.tgz (if `--cloud` is specified)

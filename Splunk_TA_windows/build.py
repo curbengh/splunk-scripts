@@ -9,7 +9,7 @@ from os import getcwd, path
 from pathlib import Path, PurePath
 from posixpath import join as posixjoin
 from re import search
-from shutil import rmtree
+from tempfile import TemporaryDirectory
 
 
 def exclusion(tarinfo):
@@ -66,71 +66,76 @@ def main(**kwargs):
     new_gz = path.join(app_dir, f"Splunk_TA_windows_{version}.tgz")
     script_dir = path.dirname(__file__)
 
-    app = ""
-    with tarfile.open(app_gz) as tar:
-        app = path.commonpath(tar.getnames())
-        tar.extractall(path=app_dir, filter="data")
+    with TemporaryDirectory() as tmpdir:
+        app = ""
+        with tarfile.open(app_gz) as tar:
+            app = path.commonpath(tar.getnames())
+            tar.extractall(path=tmpdir, filter="data")
 
-    app_out_dir = path.join(app_dir, app)
-    print(f'Extracted "{app_gz}" to "{app_out_dir}"')
+        app_out_dir = path.join(tmpdir, app)
+        print(f'Extracted "{app_gz}" to "{app_out_dir}"')
 
-    with tarfile.open(new_gz, "w:gz") as tar:
-        tar.add(app_out_dir, filter=exclusion, arcname=app)
-        tar.add(
-            path.join(script_dir, "props.conf"),
-            filter=exclusion,
-            arcname=posixjoin(app, "local", "props.conf"),
-        )
-        tar.add(
-            path.join(script_dir, "transforms.conf"),
-            filter=exclusion,
-            arcname=posixjoin(app, "local", "transforms.conf"),
-        )
-
-    print(f'Created "{new_gz}"')
-
-    if is_cloud is True:
-        new_app_id = "custom-Splunk_TA_windows"
-        new_cloud_gz = path.join(app_dir, f"{new_app_id}_{version}.tgz")
-
-        app_conf_path = path.join(
-            app_out_dir,
-            "default",
-            "app.conf",
-        )
-        app_conf = ConfigParser()
-        app_conf.read(app_conf_path)
-        app_conf["launcher"]["author"] = "custom"
-        app_conf["package"]["check_for_updates"] = "false"
-        app_conf["package"]["id"] = new_app_id
-        app_conf["id"] = {}
-        app_conf["id"]["name"] = new_app_id
-        app_conf["id"]["version"] = app_conf["launcher"]["version"]
-
-        with open(app_conf_path, "w", encoding="utf-8") as configfile:
-            app_conf.write(configfile)
-
-        with tarfile.open(new_cloud_gz, "w:gz") as tar:
-            tar.add(
-                path.join(app_conf_path),
-                filter=exclusion,
-                arcname=posixjoin(new_app_id, "default", "app.conf"),
-            )
+        with tarfile.open(new_gz, "w:gz") as tar:
+            tar.add(app_out_dir, filter=exclusion, arcname=app)
             tar.add(
                 path.join(script_dir, "props.conf"),
                 filter=exclusion,
-                arcname=posixjoin(new_app_id, "default", "props.conf"),
+                arcname=posixjoin(app, "local", "props.conf"),
             )
             tar.add(
                 path.join(script_dir, "transforms.conf"),
                 filter=exclusion,
-                arcname=posixjoin(new_app_id, "default", "transforms.conf"),
+                arcname=posixjoin(app, "local", "transforms.conf"),
             )
 
-        print(f'Created "{new_cloud_gz}"')
+        print(f'Created "{new_gz}"')
 
-    rmtree(app_out_dir, ignore_errors=True)
-    print(f'Removed "{app_out_dir}"')
+        if is_cloud is True:
+            new_app_id = "custom-Splunk_TA_windows"
+            new_cloud_gz = path.join(app_dir, f"{new_app_id}_{version}.tgz")
+
+            app_conf_path = path.join(
+                app_out_dir,
+                "default",
+                "app.conf",
+            )
+            app_conf = ConfigParser()
+            app_conf.read(app_conf_path)
+            app_conf["launcher"]["author"] = "custom"
+            app_conf["package"]["check_for_updates"] = "false"
+            app_conf["package"]["id"] = new_app_id
+            app_conf["id"] = {}
+            app_conf["id"]["name"] = new_app_id
+            app_conf["id"]["version"] = app_conf["launcher"]["version"]
+
+            new_app_conf_path = path.join(
+                app_out_dir,
+                "local",
+                "app.conf",
+            )
+
+            Path(path.dirname(new_app_conf_path)).mkdir(mode=0o755, parents=True)
+            with open(new_app_conf_path, "w", encoding="utf-8") as configfile:
+                app_conf.write(configfile)
+
+            with tarfile.open(new_cloud_gz, "w:gz") as tar:
+                tar.add(
+                    path.join(new_app_conf_path),
+                    filter=exclusion,
+                    arcname=posixjoin(new_app_id, "default", "app.conf"),
+                )
+                tar.add(
+                    path.join(script_dir, "props.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(new_app_id, "default", "props.conf"),
+                )
+                tar.add(
+                    path.join(script_dir, "transforms.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(new_app_id, "default", "transforms.conf"),
+                )
+
+            print(f'Created "{new_cloud_gz}"')
 
 
 if __name__ == "__main__":

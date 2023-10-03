@@ -8,7 +8,7 @@ from os import getcwd, path
 from pathlib import Path, PurePath
 from posixpath import join as posixjoin
 from re import search
-from shutil import rmtree
+from tempfile import TemporaryDirectory
 
 old_flag = "names.append('TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION')\n\n"
 new_flags = """names.append('TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION')
@@ -80,30 +80,30 @@ def main(**kwargs):
     new_gz = path.join(app_dir, f"SA-ldapsearch_{version}.tgz")
     path.dirname(__file__)
 
-    app = ""
-    with tarfile.open(app_gz) as tar:
-        app = path.commonpath(tar.getnames())
-        tar.extractall(path=app_dir, filter="data")
+    with TemporaryDirectory() as tmpdir:
+        app = ""
+        with tarfile.open(app_gz) as tar:
+            app = path.commonpath(tar.getnames())
+            tar.extractall(path=tmpdir, filter="data")
 
-    app_out_dir = path.join(app_dir, app)
-    print(f'Extracted "{app_gz}" to "{app_out_dir}"')
+        app_out_dir = path.join(tmpdir, app)
+        print(f'Extracted "{app_gz}" to "{app_out_dir}"')
 
-    with tarfile.open(new_gz, "w:gz") as tar_server:
-        r_str = ""
-        f_path = path.join(
-            app_out_dir, "bin", "packages", "app", "formatting_extensions.py"
-        )
-        with open(f_path, encoding="utf-8") as r:
-            r_str = r.read()
-        with open(f_path, "w", encoding="utf-8") as w:
-            w.write(r_str.replace(old_flag, new_flags).replace(old_format, new_format))
+        with tarfile.open(new_gz, "w:gz") as tar_server:
+            r_str = ""
+            f_path = path.join(
+                app_out_dir, "bin", "packages", "app", "formatting_extensions.py"
+            )
+            with open(f_path, encoding="utf-8") as r:
+                r_str = r.read()
+            with open(f_path, "w", encoding="utf-8") as w:
+                w.write(
+                    r_str.replace(old_flag, new_flags).replace(old_format, new_format)
+                )
 
-        tar_server.add(app_out_dir, filter=exclusion, arcname=app)
+            tar_server.add(app_out_dir, filter=exclusion, arcname=app)
 
-    print(f'Created "{new_gz}"')
-
-    rmtree(app_out_dir, ignore_errors=True)
-    print(f'Removed "{app_out_dir}"')
+        print(f'Created "{new_gz}"')
 
 
 if __name__ == "__main__":

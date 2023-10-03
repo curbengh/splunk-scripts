@@ -92,8 +92,10 @@ class UpdateGeoIP(GeneratingCommand):
         with tarfile.open(fileobj=BytesIO(gzip_content), mode="r:gz") as tar:
             mmdb = self.__get_mmdb(tar)
             filter_param = {}
+            if sys.version_info >= (3, 2):
+                filter_param.update({"set_attrs": False})
             if sys.version_info >= (3, 11, 4):
-                filter_param = {"filter": "data"}
+                filter_param.update({"filter": "data"})
             tar.extract(mmdb, path=MMDB_PATH, **filter_param)
 
     def generate(self):

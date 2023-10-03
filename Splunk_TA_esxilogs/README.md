@@ -13,10 +13,10 @@ TCP Syslog:
 UDP Syslog:
 
 ```
-Jan 1 12:34:56 10.100.101.102 2023-01-02T12:34:56.789Z esxihostname Hostd: info hostd[A1B2C3] [Originator@6789 sub=VsanSimsStubImpl opID=f9e8d7c6] Calling vim.host.VsanSystemEx.GetVsanRuntimeInfo
+Jan 2 13:34:56 10.100.101.102 2023-01-02T12:34:56.789Z esxihostname Hostd: info hostd[A1B2C3] [Originator@6789 sub=VsanSimsStubImpl opID=f9e8d7c6] Calling vim.host.VsanSystemEx.GetVsanRuntimeInfo
 ```
 
-"Jan 1 12:34:56" is in local time, whereas "2023-01-02T12:34:56.789Z" is in UTC.
+"Jan 2 13:34:56" is in local time, whereas "2023-01-02T12:34:56.789Z" is in UTC.
 
 ## Build
 

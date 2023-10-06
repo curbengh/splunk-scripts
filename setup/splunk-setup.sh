@@ -47,11 +47,11 @@ read -p 'Server private key password (input will not be displayed): ' SSL_PASSWO
 stty echo
 echo
 
-sed -i "s/sslPassword = ..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/inputs.conf"
+sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/inputs.conf"
 chmod 600 "$SPLUNK_SYSTEM/inputs.conf"
-sed -i "s/sslPassword = ..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/server.conf"
+sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/server.conf"
 chmod 600 "$SPLUNK_SYSTEM/server.conf"
-sed -i "s/sslPassword = ..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/web.conf"
+sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/web.conf"
 chmod 600 "$SPLUNK_SYSTEM/web.conf"
 
 tar xzf "100_splunkcloud.tar.gz" -C "$SPLUNK_APPS"
@@ -94,7 +94,7 @@ read -p '1-indexserver private key password (input will not be displayed): ' SSL
 stty echo
 echo
 
-sed -i "s/sslPassword = ..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/outputs.conf"
+sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/outputs.conf"
 
 SSL_PASSWORD=""
 
@@ -104,8 +104,8 @@ read -p '100_splunkcloud private key password (input will not be displayed): ' S
 stty echo
 echo
 
-sed -i "s/sslPassword = ..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_APPS/100_splunkcloud/local/outputs.conf"
-sed -i "s/sslPassword = ..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/local/outputs.conf"
+sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_APPS/100_splunkcloud/local/outputs.conf"
+sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/local/outputs.conf"
 
 SSL_PASSWORD=""
 

@@ -6,6 +6,7 @@ import tarfile
 from os import chdir, path
 from pathlib import Path
 from re import search
+from tempfile import TemporaryDirectory
 
 from build import main as build_app
 
@@ -43,69 +44,83 @@ def exclusion(tarinfo):
     return tarinfo
 
 
-while len(list(Path(".").glob("*-Linux-x86_64.tgz"))) <= 0:
-    print(
-        'Download the latest Splunk Enterprise from "https://www.splunk.com/en_us/download.html"'
-        " with a Splunk.com account."
-    )
-    print(f"Save the *.tgz to {chdir_path}")
-    input("Press Enter once done.\n")
+def glob(pattern, in_path="."):
+    filelist = list(Path(in_path).glob(pattern))
+    pattern_ext = path.splitext(pattern)[-1]
+    if len(filelist) >= 1:
+        return filelist[0]
+    else:
+        out_path = path.abspath(Path(input(f"Path to {pattern}: ")))
+        if path.isfile(out_path) and (
+            len(pattern_ext) <= 0
+            or (len(pattern_ext) >= 1 and path.splitext(out_path)[-1] == pattern_ext)
+        ):
+            return out_path
+        elif not path.isfile(out_path):
+            print(f'"{out_path}" is not a file or does not exist.')
+        elif len(pattern_ext) >= 1 and path.splitext(out_path)[-1] != pattern_ext:
+            print(f'"{out_path}" is not a *{pattern_ext} file.')
+        glob(pattern, in_path)
 
-while not path.isfile("splunk_host_ed25519_key"):
-    print(f'Copy splunk_host_ed25519_key from secret storage to "{chdir_path}" folder.')
-    input("Press Enter once done.\n")
 
-while not (
-    path.isfile(path.join("certs", "splunk-cert.key"))
-    and path.isfile(path.join("certs", "splunk-cert.pem"))
-    and path.isfile(path.join("certs", "splunk-cert-web.pem"))
-):
-    certs = path.join(chdir_path, "certs")
-    print(
-        f'Copy splunk-cert.key & splunk-cert.pem & splunk-cert-web.pem to "{certs}" folder.'
-    )
-    input("Press Enter once done.\n")
+enterprise_gz = glob("splunk-*-Linux-x86_64.tgz")
+output_gz = path.join(path.dirname(enterprise_gz), "splunk-setup-all.tar.gz")
+host_key = glob("splunk_host_ed25519_key")
+splunk_cert_key = glob("splunk-cert.key", "certs")
+splunk_cert_pem = glob("splunk-cert.pem", "certs")
+splunk_cert_web_pem = glob("splunk-cert-web.pem", "certs")
+deployment_apps = ["1-deploymentserver", "1-indexserver", "100_splunkcloud"]
 
-build_app(
-    directory=path.join("..", "deployment-apps", "1-deploymentserver"), output="."
-)
-build_app(directory=path.join("..", "deployment-apps", "1-indexserver"), output=".")
-build_app(directory=path.join("..", "deployment-apps", "100_splunkcloud"), output=".")
+with TemporaryDirectory() as tmpdir:
+    built_apps = {}
+    for app in deployment_apps:
+        app_path = path.join("..", "deployment-apps", app)
+        if path.isdir(app_path):
+            built_apps.add(
+                build_app(
+                    directory=app_path,
+                    output=tmpdir,
+                )
+            )
+    with tarfile.open(output_gz, "w:gz") as tar:
+        tar.add(".", filter=exclusion)
+        tar.add(
+            path.join("..", "enterprise_root_cacert.crt"),
+            arcname="./enterprise_root_cacert.crt",
+            filter=exclusion,
+        )
+        tar.add(
+            path.join("..", "enterprise_intermediate_cacert.crt"),
+            arcname="./enterprise_intermediate_cacert.crt",
+            filter=exclusion,
+        )
+        tar.add(
+            path.join(
+                "..",
+                "deployment-apps",
+                "100_splunkcloud",
+                "default",
+                "100_splunkcloud_root_cacert.crt",
+            ),
+            arcname="./100_splunkcloud_root_cacert.crt",
+            filter=exclusion,
+        )
+        tar.add(
+            path.join(
+                "..",
+                "deployment-apps",
+                "100_splunkcloud",
+                "default",
+                "100_splunkcloud_intermediate_cacert.crt",
+            ),
+            arcname="./100_splunkcloud_intermediate_cacert.crt",
+            filter=exclusion,
+        )
+        for built_app in built_apps:
+            tar.add(
+                built_app,
+                arcname=path.basename(built_app),
+                filter=exclusion,
+            )
 
-output_gz = path.join(chdir_path, "splunk-setup-all.tar.gz")
-with tarfile.open(output_gz, "w:gz") as tar:
-    tar.add(".", filter=exclusion)
-    tar.add(
-        path.join("..", "enterprise_root_cacert.crt"),
-        arcname="./enterprise_root_cacert.crt",
-        filter=exclusion,
-    )
-    tar.add(
-        path.join("..", "enterprise_intermediate_cacert.crt"),
-        arcname="./enterprise_intermediate_cacert.crt",
-        filter=exclusion,
-    )
-    tar.add(
-        path.join(
-            "..",
-            "deployment-apps",
-            "100_splunkcloud",
-            "default",
-            "100_splunkcloud_root_cacert.crt",
-        ),
-        arcname="./100_splunkcloud_root_cacert.crt",
-        filter=exclusion,
-    )
-    tar.add(
-        path.join(
-            "..",
-            "deployment-apps",
-            "100_splunkcloud",
-            "default",
-            "100_splunkcloud_intermediate_cacert.crt",
-        ),
-        arcname="./100_splunkcloud_intermediate_cacert.crt",
-        filter=exclusion,
-    )
-
-print(f"Created {output_gz}")
+print(f'Created "{output_gz}"')

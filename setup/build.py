@@ -101,7 +101,8 @@ def main(**kwargs):
                 filter=exclusion,
             )
 
-    print(f"Created {path.abspath(output_gz)}")
+    print(f'Created "{path.abspath(output_gz)}"')
+    return path.abspath(output_gz)
 
 
 if __name__ == "__main__":

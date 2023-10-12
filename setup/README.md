@@ -1,10 +1,29 @@
 # [Splunk](https://splunkhostname/)
 
+- [Deployment Apps](#deployment-apps)
 - [Splunk Setup](#splunk-setup)
 - [Server certificate](#server-certificate)
 - [UF Client Certificate](#uf-client-certificate)
 - [Could not create Splunk settings directory](#could-not-create-splunk-settings-directory)
 - [OpenSSH Client Configuration](#openssh-client-configuration)
+
+## Deployment Apps
+
+- 1-deploymentserver: Configure the deployment clients (universal forwarders) to point to the deployment server using [deploymentclient.conf](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Deploymentclientconf).
+- 1-indexserver: Configure the universal forwarders to send logs to indexing server(s) using [outputs.conf](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Outputsconf).
+- 100_splunkcloud: Similar to 1-indexserver, but send logs to Splunk Cloud instead.
+
+[prepare.py](./prepare.py) assumes the following folder structure:
+
+```
+.
+├── deployment-apps
+│   ├── 100_splunkcloud
+│   ├── 1-deploymentserver
+│   └── 1-indexserver
+└── setup
+    └── prepare.py
+```
 
 ## Splunk Setup
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Prepare setup files for Splunk deployment and save them into splunk-setup-all.tar.gz"""
+"""Prepare setup files for Splunk Enterprise installation and save them into splunk-setup-all.tar.gz"""
 
 import tarfile
 from os import chdir, path

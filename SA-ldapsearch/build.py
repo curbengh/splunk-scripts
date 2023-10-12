@@ -89,18 +89,17 @@ def main(**kwargs):
         app_out_dir = path.join(tmpdir, app)
         print(f'Extracted "{app_gz}" to "{app_out_dir}"')
 
-        with tarfile.open(new_gz, "w:gz") as tar_server:
-            r_str = ""
-            f_path = path.join(
-                app_out_dir, "bin", "packages", "app", "formatting_extensions.py"
-            )
-            with open(f_path, encoding="utf-8") as r:
-                r_str = r.read()
-            with open(f_path, "w", encoding="utf-8") as w:
-                w.write(
-                    r_str.replace(old_flag, new_flags).replace(old_format, new_format)
-                )
+        r_str = ""
+        f_path = path.join(
+            app_out_dir, "bin", "packages", "app", "formatting_extensions.py"
+        )
+        with open(f_path, encoding="utf-8") as r:
+            r_str = r.read()
+        with open(f_path, "w", encoding="utf-8") as w:
+            w.write(r_str.replace(old_flag, new_flags).replace(old_format, new_format))
+        print(f'Patched "{path.basename(f_path)}"')
 
+        with tarfile.open(new_gz, "w:gz") as tar_server:
             tar_server.add(app_out_dir, filter=exclusion, arcname=app)
 
         print(f'Created "{new_gz}"')

@@ -8,6 +8,17 @@ The tag is necessary to include change_request and change_task events into the T
 
 `src_user` field should alias to `adv_caller_id` field (incident) or `dv_opened_by`, instead of `sys_created_by`. `sys_created_by` is either user ID or "system" for auto-created tickets. `src_user` field is used in [Ticket Management](https://docs.splunk.com/Documentation/CIM/latest/User/TicketManagement#Fields_for_Ticket_Management_event_datasets) data model.
 
+## New [Ticket Management](https://docs.splunk.com/Documentation/CIM/latest/User/TicketManagement) fields
+
+New fields:
+
+- user_group
+- time_closed
+- time_start
+- time_end
+
+Refer to [datamodels.json](./datamodels.json) for specifics, you will need to create those fields manually.
+
 ## Build
 
 ```

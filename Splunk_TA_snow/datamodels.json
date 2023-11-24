@@ -1,0 +1,65 @@
+[
+  {
+    "modelName": "Ticket_Management",
+    "objects": [
+      {
+        "objectName": "All_Ticket_Management",
+        "displayName": "All Ticket Management",
+        "parentName": "BaseEvent",
+        "lineage": "All_Ticket_Management",
+        "fields": [
+          {
+            "fieldName": "user_group",
+            "owner": "All_Ticket_Management",
+            "type": "string",
+            "required": false,
+            "displayName": "user_group"
+          },
+          {
+            "fieldName": "time_closed",
+            "owner": "All_Ticket_Management",
+            "type": "string",
+            "required": false,
+            "displayName": "time_closed"
+          }
+        ]
+      },
+      {
+        "objectName": "Change",
+        "displayName": "Change",
+        "parentName": "All_Ticket_Management",
+        "lineage": "All_Ticket_Management.Change",
+        "calculations": [
+          {
+            "outputFields": [
+              {
+                "fieldName": "time_start",
+                "owner": "All_Ticket_Management.Change",
+                "type": "string",
+                "required": false,
+                "displayName": "time_start"
+              }
+            ],
+            "owner": "All_Ticket_Management.Change",
+            "calculationType": "Eval",
+            "expression": "time_start"
+          },
+          {
+            "outputFields": [
+              {
+                "fieldName": "time_end",
+                "owner": "All_Ticket_Management.Change",
+                "type": "string",
+                "required": false,
+                "displayName": "time_end"
+              }
+            ],
+            "owner": "All_Ticket_Management.Change",
+            "calculationType": "Eval",
+            "expression": "time_end"
+          }
+        ]
+      }
+    ]
+  }
+]

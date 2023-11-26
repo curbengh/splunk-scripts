@@ -1,0 +1,34 @@
+[Unit]
+Description=Systemd service file for Splunk, modified from 'splunk enable boot-start'
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+# Run chown as root
+ExecStartPre=+chown -R splunkfwd:splunkfwd "/opt/splunkforwarder"
+# https://docs.splunk.com/Documentation/Splunk/latest/Installation/UpgradeonUNIX#Upgrade_and_accept_the_license_agreement_simultaneously
+ExecStart=/opt/splunkforwarder/bin/splunk _internal_launch_under_systemd --accept-license --answer-yes
+# https://www.freedesktop.org/software/systemd/man/systemd.service.html#id-1.9.8
+ExecStartPost=+-chown -R splunkfwd:splunkfwd "/sys/fs/cgroup/system.slice/%n"
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutStopSec=360
+LimitNOFILE=65536
+LimitRTPRIO=99
+SuccessExitStatus=51 52
+RestartPreventExitStatus=51
+RestartForceExitStatus=52
+User=splunkfwd
+Group=splunkfwd
+Delegate=true
+# https://www.freedesktop.org/software/systemd/man/systemd.exec.html
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/splunkforwarder
+
+[Install]
+WantedBy=multi-user.target

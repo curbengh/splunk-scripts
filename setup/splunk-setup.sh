@@ -118,6 +118,21 @@ cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/1-indexserver/local
 chown -R splunk:splunk "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
+
+DISTRO=$(grep -oP '(?<=ID=)[\w]+' "/etc/os-release")
+DISTRO_VERSION=$(grep -oP '(?<=VERSION_ID=")[\d.]+' "/etc/os-release")
+
+if [ "$DISTRO" = "ubuntu" ]; then
+  if [ "$DISTRO_VERSION" = "18.04" ] || [ "$DISTRO_VERSION" = "20.04" ]; then
+    # cgroup1
+    sed -i 's|cgroup/system.slice|cgroup/unified/system.slice|' "/etc/systemd/system/splunkd.service"
+    if [ "$DISTRO_VERSION" = "18.04" ]; then
+      # "Executable path is not absolute" error
+      sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
+    fi
+  fi
+fi
+
 systemctl daemon-reload
 
 read -p 'Start/restart splunk? (y/n): ' RESTART_SPLUNK

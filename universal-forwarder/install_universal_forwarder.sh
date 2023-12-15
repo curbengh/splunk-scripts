@@ -10,7 +10,8 @@ alias rm="rm -rf"
 
 TEMP_DIR="/tmp/splunkuf-$(date +%s)/"
 SPLUNK_HOME="/opt/splunkforwarder"
-DISTRO=$(grep -oP '(?<=ID=)[\w]+' "/etc/os-release")
+# https://github.com/which-distro/os-release
+DISTRO=$(grep -oP '(?<=^NAME=")[\w]+' "/etc/os-release")
 DISTRO_VERSION=$(grep -oP '(?<=VERSION_ID=")[\d.]+' "/etc/os-release")
 
 # Create "splunkfwd" user without password and shell
@@ -35,7 +36,7 @@ chown -R splunkfwd:splunkfwd "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
-if [ "$DISTRO" = "ubuntu" ]; then
+if [ "$DISTRO" = "Ubuntu" ]; then
   # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
   apt install -y --no-upgrade "sysstat"
   if [ "$DISTRO_VERSION" = "18.04" ] || [ "$DISTRO_VERSION" = "20.04" ]; then
@@ -46,6 +47,8 @@ if [ "$DISTRO" = "ubuntu" ]; then
       sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
     fi
   fi
+elif [ "$DISTRO" = "CentOS Stream" ]; then
+  dnf install --refresh -y "sysstat"
 fi
 
 systemctl daemon-reload

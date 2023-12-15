@@ -11,11 +11,11 @@ alias rm="rm -rf"
 cp "hosts" "/etc/hosts"
 
 # optional: use static host key
-cp "splunk_host_ed25519_key" "/etc/ssl/splunk_host_ed25519_key"
-chmod 600 "/etc/ssl/splunk_host_ed25519_key"
-cp "splunk_host_ed25519_key.pub" "/etc/ssl/splunk_host_ed25519_key.pub"
-chmod 644 "/etc/ssl/splunk_host_ed25519_key.pub"
-chown -R root:root "/etc/ssl/"
+cp "splunk_host_ed25519_key" "/etc/ssh/splunk_host_ed25519_key"
+chmod 600 "/etc/ssh/splunk_host_ed25519_key"
+cp "splunk_host_ed25519_key.pub" "/etc/ssh/splunk_host_ed25519_key.pub"
+chmod 644 "/etc/ssh/splunk_host_ed25519_key.pub"
+chown -R root:root "/etc/ssh/"
 
 mkdir "/etc/ssh/sshd_config.d/"
 rm "/etc/ssh/sshd_config.d/50-cloud-init.conf"

@@ -39,16 +39,18 @@ cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 if [ "$DISTRO" = "Ubuntu" ]; then
   # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
   apt install -y --no-upgrade "sysstat"
-  if [ "$DISTRO_VERSION" = "18.04" ] || [ "$DISTRO_VERSION" = "20.04" ]; then
-    # cgroup1
-    sed -i 's|cgroup/system.slice|cgroup/unified/system.slice|' "/etc/systemd/system/splunkd.service"
-    if [ "$DISTRO_VERSION" = "18.04" ]; then
-      # "Executable path is not absolute" error
-      sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
-    fi
+
+  if [ "$DISTRO_VERSION" = "18.04" ]; then
+    # "Executable path is not absolute" error
+    sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
   fi
 elif [ "$DISTRO" = "CentOS Stream" ]; then
   dnf install --refresh -y "sysstat"
+fi
+
+# cgroup1
+if [ -d "/sys/fs/cgroup/unified/" ]; then
+  sed -i 's|cgroup/system.slice|cgroup/unified/system.slice|' "/etc/systemd/system/splunkd.service"
 fi
 
 systemctl daemon-reload

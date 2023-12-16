@@ -8,6 +8,9 @@ alias cp="cp -f"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
 
+# https://github.com/which-distro/os-release
+DISTRO=$(grep -oP '(?<=^NAME=")[\w]+' "/etc/os-release")
+
 cp "hosts" "/etc/hosts"
 
 # optional: use static host key
@@ -23,7 +26,12 @@ cp "sshd_config" "/etc/ssh/splunk_host_ed25519_key"
 echo "Installed SSH host key"
 
 # optional: join AD
-apt install -y --no-upgrade "sssd-ad sssd-tools realmd adcli"
+SSSD="sssd-ad sssd-tools realmd adcli"
+if [ "$DISTRO" = "Ubuntu" ]; then
+  apt install -y --no-upgrade "$SSSD"
+elif [ "$DISTRO" = "CentOS Stream" ]; then
+  dnf install --refresh -y "$SSSD"
+fi
 
 mkdir "/etc/sudoers.d/"
 cp "sudoers" "/etc/sudoers.d/ad_group"
@@ -40,16 +48,23 @@ if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
   echo "Joined Example AD domain"
 fi
 
+if [ "$DISTRO" = "Ubuntu" ]; then
+  CERT_PATH="/usr/local/share/ca-certificates"
+  UPDATE_CERT="update-ca-certificates"
+elif [ "$DISTRO" = "CentOS Stream" ]; then
+  CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
+  UPDATE_CERT="update-ca-trust"
+fi
+mkdir "$CERT_PATH"
 # Enterprise and Splunk Cloud root CA
-mkdir "/usr/local/share/ca-certificates"
-cp "enterprise_root_cacert.crt" "/usr/local/share/ca-certificates/enterprise_cacert.crt"
-cp "enterprise_intermediate_cacert.crt" "/usr/local/share/ca-certificates/enterprise_intermediate_cacert.crt"
+cp "enterprise_root_cacert.crt" "$CERT_PATH/enterprise_cacert.crt"
+cp "enterprise_intermediate_cacert.crt" "$CERT_PATH/enterprise_intermediate_cacert.crt"
 # 100_splunkcloud
-cp "100_splunkcloud_root_cacert.crt" "/usr/local/share/ca-certificates/100_splunkcloud_root_cacert.crt"
-cp "100_splunkcloud_intermediate_cacert.crt" "/usr/local/share/ca-certificates/100_splunkcloud_intermediate_cacert.crt"
+cp "100_splunkcloud_root_cacert.crt" "$CERT_PATH/100_splunkcloud_root_cacert.crt"
+cp "100_splunkcloud_intermediate_cacert.crt" "$CERT_PATH/100_splunkcloud_intermediate_cacert.crt"
 # UF CA
-cp "splunkuf-ca.crt" "/usr/local/share/ca-certificates/splunkuf-ca.crt"
-update-ca-certificates
+cp "splunkuf-ca.crt" "$CERT_PATH/splunkuf-ca.crt"
+$UPDATE_CERT
 echo "Installed custom CA certs"
 
 # https://docs.splunk.com/Documentation/Splunk/latest/Installation/InstallonLinux#Information_on_expected_default_shell_and_caveats_for_Debian_shells

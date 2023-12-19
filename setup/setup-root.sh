@@ -14,6 +14,7 @@ DISTRO=$(grep -oP '(?<=^NAME=")[\w]+' "/etc/os-release")
 cp "hosts" "/etc/hosts"
 
 # optional: use static host key
+# `HostKey /etc/ssh/splunk_host_ed25519_key` must be set in sshd_config
 cp "splunk_host_ed25519_key" "/etc/ssh/splunk_host_ed25519_key"
 chmod 600 "/etc/ssh/splunk_host_ed25519_key"
 cp "splunk_host_ed25519_key.pub" "/etc/ssh/splunk_host_ed25519_key.pub"

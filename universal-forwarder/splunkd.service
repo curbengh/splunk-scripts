@@ -1,5 +1,6 @@
+# Based on 'splunk enable boot-start'
 [Unit]
-Description=Systemd service file for Splunk, modified from 'splunk enable boot-start'
+Description=Systemd service for Splunk
 After=network-online.target
 Wants=network-online.target
 
@@ -24,11 +25,33 @@ User=splunkfwd
 Group=splunkfwd
 Delegate=true
 # https://www.freedesktop.org/software/systemd/man/systemd.exec.html
-NoNewPrivileges=true
-PrivateDevices=true
+# https://fedoraproject.org/wiki/Changes/SystemdSecurityHardening#Detailed_Description
+ReadWritePaths=/opt/splunkforwarder
 PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=/opt/splunkforwarder
+PrivateDevices=true
+ProtectHome=read-only
+ProtectClock=yes
+ProtectHostname=yes
+ProtectControlGroups=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+NoNewPrivileges=true
+DevicePolicy=closed
+KeyringMode=private
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+PrivateUsers=yes
+RemoveIPC=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
+# requires network access
+# PrivateNetwork=no
+# required by Splunk_TA_nix especially "ps"
+# ProtectProc=default
 
 [Install]
 WantedBy=multi-user.target

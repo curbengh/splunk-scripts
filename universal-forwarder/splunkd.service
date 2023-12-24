@@ -1,6 +1,6 @@
 # Based on 'splunk enable boot-start'
 [Unit]
-Description=Systemd service for Splunk
+Description=Splunk service
 After=network-online.target
 Wants=network-online.target
 

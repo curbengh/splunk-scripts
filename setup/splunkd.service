@@ -26,11 +26,34 @@ Delegate=true
 # Allow Splunk Web to listen on port <1024
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 # https://www.freedesktop.org/software/systemd/man/systemd.exec.html
-NoNewPrivileges=true
-PrivateDevices=true
+# https://fedoraproject.org/wiki/Changes/SystemdSecurityHardening#Detailed_Description
+ReadWritePaths=/opt/splunk
 PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=/opt/splunk
+PrivateDevices=true
+ProtectHome=read-only
+ProtectClock=yes
+ProtectHostname=yes
+ProtectControlGroups=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+NoNewPrivileges=true
+DevicePolicy=closed
+KeyringMode=private
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RemoveIPC=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
+# requires network access
+# PrivateNetwork=no
+# required by Splunk_TA_nix especially "ps"
+# ProtectProc=default
+# required to listen on port <1024
+# PrivateUsers=no
 
 [Install]
 WantedBy=multi-user.target

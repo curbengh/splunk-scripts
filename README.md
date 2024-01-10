@@ -7,3 +7,9 @@
 ## [setup](./setup/)
 
 Splunk setup
+
+## Packaging Splunk apps
+
+`python build.py -d path/to/app-folder -o path/to/output-folder`
+
+[build.py](./build.py) is necessary to remove execute permission from all files. Splunk Cloud will reject any app that contains files with execute permission, except for the "bin/" folder.

@@ -104,6 +104,7 @@ def linux():
     )
     with TemporaryDirectory() as tmpdir:
         deploymentserver = build_app(
+            # see ../setup/README.md#deployment-apps
             directory=path.join("..", "deployment-apps", "1-deploymentserver"),
             output=tmpdir,
         )

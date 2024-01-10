@@ -44,23 +44,26 @@ def exclusion(tarinfo):
     return tarinfo
 
 
-def glob(pattern, in_path="."):
-    filelist = list(Path(in_path).glob(pattern))
+def glob(pattern, out_path=""):
+    filelist = list(Path(".").glob(pattern))
     pattern_ext = path.splitext(pattern)[-1]
     if len(filelist) >= 1:
         return filelist[0]
-    else:
-        out_path = path.abspath(Path(input(f"Path to {pattern}: ")))
-        if path.isfile(out_path) and (
-            len(pattern_ext) <= 0
-            or (len(pattern_ext) >= 1 and path.splitext(out_path)[-1] == pattern_ext)
-        ):
-            return out_path
-        elif not path.isfile(out_path):
-            print(f'"{out_path}" is not a file or does not exist.')
-        elif len(pattern_ext) >= 1 and path.splitext(out_path)[-1] != pattern_ext:
-            print(f'"{out_path}" is not a *{pattern_ext} file.')
-        glob(pattern, in_path)
+
+    if path.isfile(out_path) and (
+        len(pattern_ext) <= 0
+        or (len(pattern_ext) >= 1 and path.splitext(out_path)[-1] == pattern_ext)
+    ):
+        return out_path
+
+    out_path = path.abspath(Path(input(f"Path to {pattern}: ")))
+
+    if not path.isfile(out_path):
+        print(f'"{out_path}" is not a file or does not exist.')
+    elif len(pattern_ext) >= 1 and path.splitext(out_path)[-1] != pattern_ext:
+        print(f'"{out_path}" is not a *{pattern_ext} file.')
+
+    return glob(pattern, out_path)
 
 
 enterprise_gz = glob("splunk-*-Linux-x86_64.tgz")

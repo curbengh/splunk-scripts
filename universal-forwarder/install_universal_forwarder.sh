@@ -44,8 +44,17 @@ if [ "$DISTRO" = "Ubuntu" ]; then
     # "Executable path is not absolute" error
     sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
   fi
-elif [ "$DISTRO" = "CentOS Stream" ]; then
-  dnf install --refresh -y "sysstat"
+else
+  case "$DISTRO" in
+    "CentOS Stream")
+      DNF="dnf"
+      ;;
+    "VMware Photon OS")
+      DNF="tdnf"
+      ;;
+  esac
+
+  $DNF install --refresh -y "sysstat"
 fi
 
 # cgroup1

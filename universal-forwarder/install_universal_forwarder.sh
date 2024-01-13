@@ -11,8 +11,8 @@ alias rm="rm -rf"
 TEMP_DIR="/tmp/splunkuf-$(date +%s)/"
 SPLUNK_HOME="/opt/splunkforwarder"
 # https://github.com/which-distro/os-release
-DISTRO=$(grep -oP '(?<=^NAME=")[\w]+' "/etc/os-release")
-DISTRO_VERSION=$(grep -oP '(?<=VERSION_ID=")[\d.]+' "/etc/os-release")
+DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
+DISTRO_VERSION=$(grep -oP '^VERSION_ID="?\K[\d.]+' "/etc/os-release")
 
 # Create "splunkfwd" user without password and shell
 # Splunk app can still run shell scripts even without shell
@@ -36,7 +36,7 @@ chown -R splunkfwd:splunkfwd "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
-if [ "$DISTRO" = "Ubuntu" ]; then
+if [ "$DISTRO" = "ubuntu" ]; then
   # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
   apt install -y --no-upgrade "sysstat"
 
@@ -46,10 +46,10 @@ if [ "$DISTRO" = "Ubuntu" ]; then
   fi
 else
   case "$DISTRO" in
-    "CentOS Stream")
+    "centos")
       DNF="dnf"
       ;;
-    "VMware Photon OS")
+    "photon")
       DNF="tdnf"
       ;;
   esac

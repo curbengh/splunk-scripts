@@ -9,7 +9,7 @@ alias mkdir="mkdir -p"
 alias rm="rm -rf"
 
 # https://github.com/which-distro/os-release
-DISTRO=$(grep -oP '(?<=^NAME=")[\w]+' "/etc/os-release")
+DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
 
 cp "hosts" "/etc/hosts"
 
@@ -28,9 +28,9 @@ echo "Installed SSH host key"
 
 # optional: join AD
 SSSD="sssd-ad sssd-tools realmd adcli"
-if [ "$DISTRO" = "Ubuntu" ]; then
+if [ "$DISTRO" = "ubuntu" ]; then
   apt install -y --no-upgrade "$SSSD"
-elif [ "$DISTRO" = "CentOS Stream" ]; then
+elif [ "$DISTRO" = "centos" ]; then
   dnf install --refresh -y "$SSSD"
 fi
 
@@ -49,10 +49,10 @@ if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
   echo "Joined Example AD domain"
 fi
 
-if [ "$DISTRO" = "Ubuntu" ]; then
+if [ "$DISTRO" = "ubuntu" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"
-elif [ "$DISTRO" = "CentOS Stream" ]; then
+elif [ "$DISTRO" = "centos" ]; then
   CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
   UPDATE_CERT="update-ca-trust"
 fi

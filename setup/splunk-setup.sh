@@ -120,11 +120,11 @@ chown -R splunk:splunk "$SPLUNK_HOME"
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # https://github.com/which-distro/os-release
-DISTRO=$(grep -oP '(?<=^NAME=")[\w]+' "/etc/os-release")
-DISTRO_VERSION=$(grep -oP '(?<=VERSION_ID=")[\d.]+' "/etc/os-release")
+DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
+DISTRO_VERSION=$(grep -oP '^VERSION_ID="?\K[\d.]+' "/etc/os-release")
 
 # "Executable path is not absolute" error
-if [ "$DISTRO" = "Ubuntu" ] && [ "$DISTRO_VERSION" = "18.04" ]; then
+if [ "$DISTRO" = "ubuntu" ] && [ "$DISTRO_VERSION" = "18.04" ]; then
   sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
 fi
 

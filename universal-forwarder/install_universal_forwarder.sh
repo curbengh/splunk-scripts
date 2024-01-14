@@ -40,8 +40,20 @@ case "$DISTRO" in
   "ubuntu")
     INSTALL="apt install -y --no-upgrade"
     ;;
+  "debian")
+    INSTALL="apt-get install -y --no-upgrade"
+    ;;
   "centos")
     INSTALL="dnf install --refresh -y"
+    ;;
+  "fedora")
+    INSTALL="dnf install --refresh -y"
+    ;;
+  "opensuse-leap")
+    INSTALL="zypper install -y"
+    ;;
+  "opensuse-tumbleweed")
+    INSTALL="zypper install -y"
     ;;
   "photon")
     INSTALL="tdnf install --refresh -y"

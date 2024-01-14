@@ -30,7 +30,7 @@ echo "Installed SSH host key"
 SSSD="sssd-ad sssd-tools realmd adcli"
 if [ "$DISTRO" = "ubuntu" ]; then
   apt install -y --no-upgrade "$SSSD"
-elif [ "$DISTRO" = "centos" ]; then
+elif [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   dnf install --refresh -y "$SSSD"
 fi
 
@@ -52,7 +52,7 @@ fi
 if [ "$DISTRO" = "ubuntu" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"
-elif [ "$DISTRO" = "centos" ]; then
+elif [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
   UPDATE_CERT="update-ca-trust"
 fi

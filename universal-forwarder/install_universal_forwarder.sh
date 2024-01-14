@@ -49,6 +49,9 @@ case "$DISTRO" in
   "fedora")
     INSTALL="dnf install --refresh -y"
     ;;
+  "rhel")
+    INSTALL="yum install --refresh -y"
+    ;;
   "opensuse-leap")
     INSTALL="zypper install -y"
     ;;

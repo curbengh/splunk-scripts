@@ -36,25 +36,26 @@ chown -R splunkfwd:splunkfwd "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
-if [ "$DISTRO" = "ubuntu" ]; then
-  # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
-  apt install -y --no-upgrade "sysstat"
+case "$DISTRO" in
+  "ubuntu")
+    INSTALL="apt install -y --no-upgrade"
+    ;;
+  "centos")
+    INSTALL="dnf install --refresh -y"
+    ;;
+  "photon")
+    INSTALL="tdnf install --refresh -y"
+    ;;
+esac
 
-  if [ "$DISTRO_VERSION" = "18.04" ]; then
-    # "Executable path is not absolute" error
-    sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
-  fi
-else
-  case "$DISTRO" in
-    "centos")
-      DNF="dnf"
-      ;;
-    "photon")
-      DNF="tdnf"
-      ;;
-  esac
+# Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
+$INSTALL "sysstat"
 
-  $DNF install --refresh -y "sysstat"
+# "Executable path is not absolute" error
+# this error is fixed in Ubuntu 20.04
+# it's probably fixed in prior to systemd 245, but definitely after systemd 237 (Ubuntu 18.04)
+if [ $(systemctl --version | grep -oP 'systemd\s\K\d+') -lt "245" ];
+  sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
 fi
 
 # cgroup1

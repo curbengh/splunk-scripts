@@ -124,7 +124,9 @@ DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
 DISTRO_VERSION=$(grep -oP '^VERSION_ID="?\K[\d.]+' "/etc/os-release")
 
 # "Executable path is not absolute" error
-if [ "$DISTRO" = "ubuntu" ] && [ "$DISTRO_VERSION" = "18.04" ]; then
+# this error is fixed in Ubuntu 20.04
+# it's probably fixed in prior to systemd 245, but definitely after systemd 237 (Ubuntu 18.04)
+if [ $(systemctl --version | grep -oP 'systemd\s\K\d+') -lt "245" ];
   sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
 fi
 

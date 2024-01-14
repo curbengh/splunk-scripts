@@ -28,9 +28,9 @@ echo "Installed SSH host key"
 
 # optional: join AD
 SSSD="sssd-ad sssd-tools realmd adcli"
-if [ "$DISTRO" = "ubuntu" ]; then
+if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   apt install -y --no-upgrade "$SSSD"
-elif [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
+elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   dnf install --refresh -y "$SSSD"
 fi
 
@@ -49,10 +49,10 @@ if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
   echo "Joined Example AD domain"
 fi
 
-if [ "$DISTRO" = "ubuntu" ]; then
+if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"
-elif [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
+elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
   UPDATE_CERT="update-ca-trust"
 fi

@@ -36,35 +36,14 @@ chown -R splunkfwd:splunkfwd "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
-case "$DISTRO" in
-  "ubuntu")
-    INSTALL="apt install -y --no-upgrade"
-    ;;
-  "debian")
-    INSTALL="apt-get install -y --no-upgrade"
-    ;;
-  "centos")
-    INSTALL="dnf install --refresh -y"
-    ;;
-  "fedora")
-    INSTALL="dnf install --refresh -y"
-    ;;
-  "rhel")
-    INSTALL="yum install --refresh -y"
-    ;;
-  "opensuse-leap")
-    INSTALL="zypper install -y"
-    ;;
-  "opensuse-tumbleweed")
-    INSTALL="zypper install -y"
-    ;;
-  "photon")
-    INSTALL="tdnf install --refresh -y"
-    ;;
-esac
-
 # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
-$INSTALL "sysstat"
+if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
+  apt install -y --no-upgrade "sysstat"
+elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
+  dnf install --refresh -y "sysstat"
+elif [ "$DISTRO" = "photon" ]; then
+  tdnf install --refresh -y "sysstat"
+fi
 
 # "Executable path is not absolute" error
 # this error is fixed in Ubuntu 20.04
@@ -76,6 +55,8 @@ fi
 # cgroup1
 if [ -d "/sys/fs/cgroup/unified/" ]; then
   sed -i 's|cgroup/system.slice|cgroup/unified/system.slice|' "/etc/systemd/system/splunkd.service"
+elif [ -d "/sys/fs/cgroup/systemd/" ]; then
+  sed -i 's|cgroup/system.slice|cgroup/systemd/system.slice|' "/etc/systemd/system/splunkd.service"
 fi
 
 systemctl daemon-reload

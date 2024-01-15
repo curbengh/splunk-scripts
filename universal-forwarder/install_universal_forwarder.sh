@@ -40,9 +40,9 @@ chown -R splunkfwd:splunkfwd "$SPLUNK_HOME"
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
-if [ -n "$IS_DEBIAN_BASE" ]; then
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   apt install -y --no-upgrade "sysstat"
-elif [ -n "$IS_FEDORA_BASE" ]; then
+elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
   dnf install --refresh -y "sysstat"
 elif [ -n "$IS_SUSE_BASE" ]; then
   zypper install -y "sysstat"

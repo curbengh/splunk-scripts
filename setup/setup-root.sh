@@ -32,6 +32,8 @@ if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   apt install -y --no-upgrade "$SSSD"
 elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   dnf install --refresh -y "$SSSD"
+elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
+  zypper install -y "$SSSD"
 fi
 
 mkdir "/etc/sudoers.d/"
@@ -55,6 +57,10 @@ if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
 elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
   UPDATE_CERT="update-ca-trust"
+elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
+  # https://github.com/openSUSE/ca-certificates
+  CERT_PATH="/usr/share/pki/trust/anchors"
+  UPDATE_CERT="update-ca-certificates"
 fi
 mkdir "$CERT_PATH"
 # Enterprise and Splunk Cloud root CA

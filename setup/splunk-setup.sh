@@ -121,7 +121,6 @@ cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # https://github.com/which-distro/os-release
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-DISTRO_VERSION=$(grep -oP '^VERSION_ID="?\K[\d.]+' "/etc/os-release")
 
 # "Executable path is not absolute" error
 # this error is fixed in Ubuntu 20.04
@@ -133,6 +132,8 @@ fi
 # cgroup1
 if [ -d "/sys/fs/cgroup/unified/" ]; then
   sed -i 's|cgroup/system.slice|cgroup/unified/system.slice|' "/etc/systemd/system/splunkd.service"
+elif [ -d "/sys/fs/cgroup/systemd/" ]; then
+  sed -i 's|cgroup/system.slice|cgroup/systemd/system.slice|' "/etc/systemd/system/splunkd.service"
 fi
 
 systemctl daemon-reload

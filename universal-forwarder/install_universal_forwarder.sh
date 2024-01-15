@@ -12,7 +12,6 @@ TEMP_DIR="/tmp/splunkuf-$(date +%s)/"
 SPLUNK_HOME="/opt/splunkforwarder"
 # https://github.com/which-distro/os-release
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-DISTRO_VERSION=$(grep -oP '^VERSION_ID="?\K[\d.]+' "/etc/os-release")
 
 # Create "splunkfwd" user without password and shell
 # Splunk app can still run shell scripts even without shell
@@ -41,6 +40,8 @@ if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   apt install -y --no-upgrade "sysstat"
 elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
   dnf install --refresh -y "sysstat"
+elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
+  zypper install -y "sysstat"
 elif [ "$DISTRO" = "photon" ]; then
   tdnf install --refresh -y "sysstat"
 fi

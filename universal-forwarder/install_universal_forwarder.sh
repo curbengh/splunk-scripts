@@ -38,7 +38,7 @@ cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
 if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   apt install -y --no-upgrade "sysstat"
-elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
+elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ] || [ "$DISTRO" = "amzn" ]; then
   dnf install --refresh -y "sysstat"
 elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
   zypper install -y "sysstat"

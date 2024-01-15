@@ -119,9 +119,6 @@ chown -R splunk:splunk "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
-# https://github.com/which-distro/os-release
-DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-
 # "Executable path is not absolute" error
 # this error is fixed in Ubuntu 20.04
 # it's probably fixed in prior to systemd 245, but definitely after systemd 237 (Ubuntu 18.04)

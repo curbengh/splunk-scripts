@@ -30,7 +30,7 @@ echo "Installed SSH host key"
 SSSD="sssd-ad sssd-tools realmd adcli"
 if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   apt install -y --no-upgrade "$SSSD"
-elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
+elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ] || [ "$DISTRO" = "amzn" ]; then
   dnf install --refresh -y "$SSSD"
 elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
   zypper install -y "$SSSD"
@@ -54,7 +54,7 @@ fi
 if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"
-elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ]; then
+elif [ "$DISTRO" = "fedora" ] || [ "$DISTRO" = "centos" ] || [ "$DISTRO" = "rhel" ] || [ "$DISTRO" = "amzn" ]; then
   CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
   UPDATE_CERT="update-ca-trust"
 elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then

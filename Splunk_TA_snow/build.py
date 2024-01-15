@@ -76,22 +76,23 @@ def main(**kwargs):
         app_out_dir = path.join(tmpdir, app)
         print(f'Extracted "{app_gz}" to "{app_out_dir}"')
 
-        with tarfile.open(new_gz, "w:gz") as tar:
-            tar.add(app_out_dir, filter=exclusion, arcname=app)
-            tar.add(
-                path.join(script_dir, "props.conf"),
-                filter=exclusion,
-                arcname=posixjoin(app, "local", "props.conf"),
-            )
-            tar.add(
-                path.join(script_dir, "transforms.conf"),
-                filter=exclusion,
-                arcname=posixjoin(app, "local", "transforms.conf"),
-            )
+        if is_cloud is False:
+            with tarfile.open(new_gz, "w:gz") as tar:
+                tar.add(app_out_dir, filter=exclusion, arcname=app)
+                tar.add(
+                    path.join(script_dir, "props.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(app, "local", "props.conf"),
+                )
+                tar.add(
+                    path.join(script_dir, "transforms.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(app, "local", "transforms.conf"),
+                )
 
-        print(f'Created "{new_gz}"')
+            print(f'Created "{new_gz}"')
 
-        if is_cloud is True:
+        else:
             new_app_id = "custom-Splunk_TA_esxilogs"
             new_cloud_gz = path.join(app_dir, f"{new_app_id}_{version}.tgz")
 

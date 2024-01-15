@@ -58,7 +58,7 @@ def main(**kwargs):
             "Download the latest [Splunk Add-on for Microsoft Windows]"
             "(https://splunkbase.splunk.com/app/742) with a Splunk.com account."
         )
-        app_gz = input("Path to splunk-add-on-for-vmware-esxi-logs_*.tgz: ")
+        app_gz = input("Path to splunk-add-on-for-microsoft-windows_*.tgz: ")
     is_cloud = kwargs.get("cloud", False)
 
     app_dir, app_filename = path.split(app_gz)

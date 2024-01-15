@@ -12,7 +12,10 @@ TEMP_DIR="/tmp/splunkuf-$(date +%s)/"
 SPLUNK_HOME="/opt/splunkforwarder"
 # https://github.com/which-distro/os-release
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-IS_FEDORA_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" | grep "fedora" || [ $? = 1 ])
+DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release")
+IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
+IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
+IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 
 # Create "splunkfwd" user without password and shell
 # Splunk app can still run shell scripts even without shell
@@ -37,11 +40,11 @@ chown -R splunkfwd:splunkfwd "$SPLUNK_HOME"
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
-if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
+if [ -n "$IS_DEBIAN_BASE" ]; then
   apt install -y --no-upgrade "sysstat"
 elif [ -n "$IS_FEDORA_BASE" ]; then
   dnf install --refresh -y "sysstat"
-elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
+elif [ -n "$IS_SUSE_BASE" ]; then
   zypper install -y "sysstat"
 elif [ "$DISTRO" = "photon" ]; then
   tdnf install --refresh -y "sysstat"

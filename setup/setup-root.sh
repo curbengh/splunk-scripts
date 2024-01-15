@@ -9,8 +9,10 @@ alias mkdir="mkdir -p"
 alias rm="rm -rf"
 
 # https://github.com/which-distro/os-release
-DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-IS_FEDORA_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" | grep "fedora" || [ $? = 1 ])
+DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release")
+IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
+IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
+IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 
 cp "hosts" "/etc/hosts"
 
@@ -29,11 +31,11 @@ echo "Installed SSH host key"
 
 # optional: join AD
 SSSD="sssd-ad sssd-tools realmd adcli"
-if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
+if [ -n "$IS_DEBIAN_BASE" ]; then
   apt install -y --no-upgrade "$SSSD"
 elif [ -n "$IS_FEDORA_BASE" ]; then
   dnf install --refresh -y "$SSSD"
-elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
+elif [ -n "$IS_SUSE_BASE" ]; then
   zypper install -y "$SSSD"
 fi
 
@@ -52,13 +54,13 @@ if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
   echo "Joined Example AD domain"
 fi
 
-if [ "$DISTRO" = "ubuntu" ] || [ "$DISTRO" = "debian" ]; then
+if [ -n "$IS_DEBIAN_BASE" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"
 elif [ -n "$IS_FEDORA_BASE" ]; then
   CERT_PATH="/usr/share/pki/ca-trust-source/anchors"
   UPDATE_CERT="update-ca-trust"
-elif [ "$DISTRO" = "opensuse" ] || [ "$DISTRO" = "sles" ] || [ "$DISTRO" = "sled" ]; then
+elif [ -n "$IS_SUSE_BASE" ]; then
   # https://github.com/openSUSE/ca-certificates
   CERT_PATH="/usr/share/pki/trust/anchors"
   UPDATE_CERT="update-ca-certificates"

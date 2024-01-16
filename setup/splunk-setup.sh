@@ -11,8 +11,7 @@ SPLUNK_HOME="/opt/splunk"
 
 # Create "splunk" user without password and shell
 # Splunk app can still run shell scripts even without shell
-id -u "splunk" >/dev/null 2>&1 || user_not_exist="$?"
-if [ -n "$user_not_exist" ]; then
+if ! id -u "splunk" >/dev/null 2>&1; then
   echo '"splunk" user not found, creating...'
   useradd --system --create-home --home-dir "$SPLUNK_HOME" --shell "/usr/sbin/nologin" splunk
 else
@@ -122,7 +121,7 @@ cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 # "Executable path is not absolute" error
 # this error is fixed in Ubuntu 20.04
 # it's probably fixed in prior to systemd 245, but definitely after systemd 237 (Ubuntu 18.04)
-if [ $(systemctl --version | grep -oP 'systemd\s\K\d+') -lt "245" ];
+if [ $(systemctl --version | grep -oP 'systemd\s\K\d+') -lt "245" ]; then
   sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
 fi
 
@@ -139,7 +138,7 @@ read -p 'Start/restart splunk? (y/n): ' RESTART_SPLUNK
 
 if [ "$RESTART_SPLUNK" = "y" ]; then
   echo "Start/restarting splunk..."
-  IS_ENABLED=$(systemctl is-enabled "splunkd.service")
+  IS_ENABLED=$(systemctl is-enabled "splunkd.service" || [ $? = 1 ])
   if [ "$IS_ENABLED" != "enabled" ]; then
     systemctl enable --now "splunkd.service"
   else

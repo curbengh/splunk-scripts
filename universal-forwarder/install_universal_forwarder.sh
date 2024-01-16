@@ -12,15 +12,14 @@ TEMP_DIR="/tmp/splunkuf-$(date +%s)/"
 SPLUNK_HOME="/opt/splunkforwarder"
 # https://github.com/which-distro/os-release
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release")
+DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 
 # Create "splunkfwd" user without password and shell
 # Splunk app can still run shell scripts even without shell
-id -u "splunkfwd" >/dev/null 2>&1 || user_not_exist="$?"
-if [ -n "$user_not_exist" ]; then
+if ! id -u "splunkfwd" >/dev/null 2>&1; then
   echo '"splunkfwd" user not found, creating...'
   useradd --system --create-home --home-dir "$SPLUNK_HOME" --shell "/usr/sbin/nologin" splunkfwd
 else
@@ -29,7 +28,7 @@ fi
 
 mkdir "$TEMP_DIR"
 SCRIPT_DIR=$(dirname "$0")
-tar xzf "$SCRIPT_DIR/splunkuf-setup-all.tar.gz" -C "$TEMP_DIR"
+find "$SCRIPT_DIR" -type f -name 'splunkuf-setup-all-*.tar.gz' | xargs -I _ tar xzf _ -C "$TEMP_DIR"
 
 cd "$TEMP_DIR"
 find "." -type f -name 'splunkforwarder-*-Linux-x86_64.tgz' | xargs -I _ tar xzf _ -C "/opt"
@@ -53,7 +52,7 @@ fi
 # "Executable path is not absolute" error
 # this error is fixed in Ubuntu 20.04
 # it's probably fixed prior to systemd 245, but definitely after systemd 237 (Ubuntu 18.04)
-if [ $(systemctl --version | grep -oP 'systemd\s\K\d+') -lt "245" ];
+if [ $(systemctl --version | grep -oP 'systemd\s\K\d+') -lt "245" ]; then
   sed -E -i 's|([+-])chown|\1/bin/chown|g' "/etc/systemd/system/splunkd.service"
 fi
 
@@ -67,7 +66,7 @@ fi
 systemctl daemon-reload
 
 echo "Start/restarting splunk..."
-IS_ENABLED=$(systemctl is-enabled "splunkd.service")
+IS_ENABLED=$(systemctl is-enabled "splunkd.service" || [ $? = 1 ])
 if [ "$IS_ENABLED" != "enabled" ]; then
   systemctl enable --now "splunkd.service"
 else

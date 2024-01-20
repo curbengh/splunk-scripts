@@ -40,7 +40,8 @@ PrivateMounts=yes
 PrivateTmp=true
 # required to listen on port <1024
 # PrivateUsers=no
-ProcSubset=pid
+# see ProtectProc
+# ProcSubset=all
 ProtectClock=yes
 ProtectControlGroups=yes
 ProtectHome=read-only
@@ -61,8 +62,9 @@ SystemCallArchitectures=native
 SystemCallErrorNumber=EPERM
 # the sets in older systemd (e.g. v252) have incomplete list of system calls, so allow-list does not work
 # https://github.com/systemd/systemd/blob/main/src/shared/seccomp-util.c
-SystemCallFilter=~@aio @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @raw-io @reboot @resources @sandbox @setuid @swap @sync @timer
-# SystemCallFilter=@basic-io @chown @file-system @io-event @ipc @network-io @privileged @process @signal @system-service
+# memlock & sync are notably used by kvstore/mongodb
+SystemCallFilter=~@aio @clock @cpu-emulation @debug @keyring @module @mount @obsolete @pkey @raw-io @reboot @resources @sandbox @setuid @swap @timer
+# SystemCallFilter=@basic-io @chown @file-system @io-event @ipc @memlock @network-io @privileged @process @signal @sync @system-service
 
 [Install]
 WantedBy=multi-user.target

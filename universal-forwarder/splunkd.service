@@ -37,7 +37,8 @@ PrivateMounts=yes
 # PrivateNetwork=no
 PrivateTmp=true
 PrivateUsers=yes
-ProcSubset=pid
+# see ProtectProc
+# ProcSubset=all
 ProtectClock=yes
 ProtectControlGroups=yes
 ProtectHome=read-only

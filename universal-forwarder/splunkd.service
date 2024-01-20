@@ -26,40 +26,40 @@ Group=splunkfwd
 Delegate=true
 # https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 # https://fedoraproject.org/wiki/Changes/SystemdSecurityHardening#Detailed_Description
-ReadWritePaths=/opt/splunkforwarder
-PrivateTmp=true
-ProtectSystem=strict
-PrivateDevices=true
-ProtectHome=read-only
-ProtectClock=yes
-ProtectHostname=yes
-ProtectControlGroups=yes
-ProtectKernelLogs=yes
-ProtectKernelModules=yes
-ProtectKernelTunables=yes
-NoNewPrivileges=true
 DevicePolicy=closed
 KeyringMode=private
 LockPersonality=yes
 MemoryDenyWriteExecute=yes
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateMounts=yes
+# requires network access
+# PrivateNetwork=no
+PrivateTmp=true
 PrivateUsers=yes
+ProcSubset=pid
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectHome=read-only
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+# required by Splunk_TA_nix especially "ps"
+# ProtectProc=default
+ProtectSystem=strict
+ReadWritePaths=/opt/splunkforwarder
 RemoveIPC=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 RestrictNamespaces=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 SystemCallArchitectures=native
-PrivateMounts=yes
-ProcSubset=pid
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 SystemCallErrorNumber=EPERM
 # the sets in older systemd (e.g. v252) have incomplete list of system calls, so allow-list does not work
 # https://github.com/systemd/systemd/blob/main/src/shared/seccomp-util.c
 SystemCallFilter=~@aio @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @raw-io @reboot @resources @sandbox @setuid @swap @sync @timer
 # SystemCallFilter=@basic-io @chown @file-system @io-event @ipc @network-io @privileged @process @signal @system-service
-# requires network access
-# PrivateNetwork=no
-# required by Splunk_TA_nix especially "ps"
-# ProtectProc=default
 
 [Install]
 WantedBy=multi-user.target

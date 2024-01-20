@@ -49,6 +49,13 @@ RestrictNamespaces=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 SystemCallArchitectures=native
+PrivateMounts=yes
+ProcSubset=pid
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallErrorNumber=EPERM
+# the sets in older systemd (e.g. v252) have incomplete list of system calls, so allow-list does not work
+# https://github.com/systemd/systemd/blob/main/src/shared/seccomp-util.c
+SystemCallFilter=~@aio @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @raw-io @reboot @resources @sandbox @setuid @swap @sync @timer
 # requires network access
 # PrivateNetwork=no
 # required by Splunk_TA_nix especially "ps"

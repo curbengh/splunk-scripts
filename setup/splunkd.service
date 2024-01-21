@@ -46,7 +46,8 @@ ProtectClock=yes
 ProtectControlGroups=yes
 ProtectHome=read-only
 ProtectHostname=yes
-ProtectKernelLogs=yes
+# required by Splunk_TA_nix/vmstat_metric.sh
+ProtectKernelLogs=no
 ProtectKernelModules=yes
 ProtectKernelTunables=yes
 # required by Splunk_TA_nix especially "ps"
@@ -54,7 +55,8 @@ ProtectKernelTunables=yes
 ProtectSystem=strict
 ReadWritePaths=/opt/splunk
 RemoveIPC=yes
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+# AF_NETLINK is used by Splunk_TA_nix/interfaces_metric.sh
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
 RestrictNamespaces=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
@@ -62,9 +64,11 @@ SystemCallArchitectures=native
 SystemCallErrorNumber=EPERM
 # the sets in older systemd (e.g. v252) have incomplete list of system calls, so allow-list does not work
 # https://github.com/systemd/systemd/blob/main/src/shared/seccomp-util.c
-# memlock & sync are notably used by kvstore/mongodb
-SystemCallFilter=~@aio @clock @cpu-emulation @debug @keyring @module @mount @obsolete @pkey @raw-io @reboot @resources @sandbox @setuid @swap @timer
-# SystemCallFilter=@basic-io @chown @file-system @io-event @ipc @memlock @network-io @privileged @process @signal @sync @system-service
+# @memlock & @sync are notably used by kvstore/mongodb
+# @sync is used by Splunk_TA_nix/update.sh when running package manager
+SystemCallFilter=~@clock @cpu-emulation @debug @module @mount @obsolete @pkey @raw-io @reboot @sandbox @swap
+# @system-service set in older systemd (<= v252) has incomplete list of system calls, so the following allow-list does not work
+# SystemCallFilter=@system-service
 
 [Install]
 WantedBy=multi-user.target

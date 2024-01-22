@@ -8,14 +8,25 @@ alias cp="cp -f"
 alias mkdir="mkdir -p"
 
 SPLUNK_HOME="/opt/splunk"
+SPLUNK_USER="splunk"
+
+# https://github.com/which-distro/os-release
+DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
+DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
+IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
 
 # Create "splunk" user without password and shell
 # Splunk app can still run shell scripts even without shell
-if ! id -u "splunk" >/dev/null 2>&1; then
-  echo '"splunk" user not found, creating...'
-  useradd --system --create-home --home-dir "$SPLUNK_HOME" --shell "/usr/sbin/nologin" splunk
+if ! id -u "$SPLUNK_USER" >/dev/null 2>&1; then
+  echo "\"$SPLUNK_USER\" user not found, creating..."
+  useradd --system --create-home --home-dir "$SPLUNK_HOME" --shell "/usr/sbin/nologin" "$SPLUNK_USER"
 else
-  echo '"splunk" user exists'
+  echo "\"$SPLUNK_USER\" user exists"
+fi
+
+# Grant access to /var/log
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
+  usermod --append --groups "adm" "$SPLUNK_USER"
 fi
 
 tar xzf "splunk-setup-all.tar.gz"
@@ -114,7 +125,7 @@ cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/loc
 cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/1-deploymentserver/local/"
 cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/"
 
-chown -R splunk:splunk "$SPLUNK_HOME"
+chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 

@@ -4,6 +4,8 @@
 
 Field extraction/transformation on output log of [`Get-WindowsUpdateLog`](https://learn.microsoft.com/en-us/powershell/module/windowsupdate/get-windowsupdatelog) launched by "Splunk_TA_windows/bin/powershell/generate_windows_update_logs.ps1". Since Windows Server 2016 and Windows 10, Windows Update log is no longer available at "C:\Windows\WindowsUpdate.log".
 
+The field extraction is also necessary to map to [Updates](https://docs.splunk.com/Documentation/CIM/5.3.1/User/Updates) data model.
+
 ## Build
 
 ```
@@ -19,3 +21,4 @@ Outputs:
 
 - Splunk_TA_windows\_\*.tgz
 - custom-Splunk_TA_windows\_\*.tgz (if `--cloud` is specified)
+  - This should be installed alongside the Splunk_TA_windows from [Splunkbase](https://splunkbase.splunk.com/app/742)

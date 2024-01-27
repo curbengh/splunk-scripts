@@ -79,9 +79,19 @@ def main(**kwargs):
             with tarfile.open(new_gz, "w:gz") as tar:
                 tar.add(app_out_dir, filter=exclusion, arcname=app)
                 tar.add(
+                    path.join(script_dir, "eventtypes.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(app, "local", "eventtypes.conf"),
+                )
+                tar.add(
                     path.join(script_dir, "props.conf"),
                     filter=exclusion,
                     arcname=posixjoin(app, "local", "props.conf"),
+                )
+                tar.add(
+                    path.join(script_dir, "tags.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(app, "local", "tags.conf"),
                 )
                 tar.add(
                     path.join(script_dir, "transforms.conf"),
@@ -126,9 +136,19 @@ def main(**kwargs):
                     arcname=posixjoin(new_app_id, "default", "app.conf"),
                 )
                 tar.add(
+                    path.join(script_dir, "eventtypes.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(new_app_id, "default", "eventtypes.conf"),
+                )
+                tar.add(
                     path.join(script_dir, "props.conf"),
                     filter=exclusion,
                     arcname=posixjoin(new_app_id, "default", "props.conf"),
+                )
+                tar.add(
+                    path.join(script_dir, "tags.conf"),
+                    filter=exclusion,
+                    arcname=posixjoin(new_app_id, "default", "tags.conf"),
                 )
                 tar.add(
                     path.join(script_dir, "transforms.conf"),

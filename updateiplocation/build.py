@@ -71,7 +71,7 @@ def exclusion(tarinfo):
         # tarinfo uses posix (not nt)
         if (
             tarinfo.name.startswith(posixjoin(app, "bin"))
-            and path.splitext(tarinfo.name)[-1] == ".py"
+            and PurePath(tarinfo.name).suffix == ".py"
         ):
             tarinfo.mode = 0o744
     if tarinfo.isdir():

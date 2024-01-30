@@ -52,7 +52,7 @@ def exclusion(tarinfo):
         # tarinfo uses posix (not nt)
         if (
             tarinfo.name.startswith(posixjoin(app, "bin"))
-            and path.splitext(tarinfo.name)[-1] == ".py"
+            and PurePath(tarinfo.name).suffix == ".py"
         ):
             tarinfo.mode = 0o744
     if tarinfo.isdir():
@@ -76,9 +76,8 @@ def main(**kwargs):
         app_gz = input("Path to splunk-supporting-add-on-for-active-directory_*.tgz: ")
 
     app_dir, app_filename = path.split(app_gz)
-    version = path.splitext(app_filename)[0].split("_")[-1]
+    version = PurePath(app_filename).stem.split("_")[-1]
     new_gz = path.join(app_dir, f"SA-ldapsearch_{version}.tgz")
-    path.dirname(__file__)
 
     with TemporaryDirectory() as tmpdir:
         app = ""

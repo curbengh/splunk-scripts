@@ -6,7 +6,7 @@ import tarfile
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from datetime import date
 from os import chdir, path
-from pathlib import Path
+from pathlib import Path, PurePath
 from re import search, sub
 from sys import path as sys_path
 from tempfile import TemporaryDirectory
@@ -49,13 +49,13 @@ def exclusion(tarinfo):
 
 def glob(pattern, out_path=""):
     filelist = list(Path(".").glob(pattern))
-    pattern_ext = path.splitext(pattern)[-1]
+    pattern_ext = PurePath(pattern).suffix
     if len(filelist) >= 1:
         return filelist[0]
 
     if path.isfile(out_path) and (
         len(pattern_ext) <= 0
-        or (len(pattern_ext) >= 1 and path.splitext(out_path)[-1] == pattern_ext)
+        or (len(pattern_ext) >= 1 and PurePath(out_path).suffix == pattern_ext)
     ):
         return out_path
 
@@ -63,7 +63,7 @@ def glob(pattern, out_path=""):
 
     if not path.isfile(out_path):
         print(f'"{out_path}" is not a file or does not exist.')
-    elif len(pattern_ext) >= 1 and path.splitext(out_path)[-1] != pattern_ext:
+    elif len(pattern_ext) >= 1 and PurePath(out_path).suffix != pattern_ext:
         print(f'"{out_path}" is not a *{pattern_ext} file.')
 
     return glob(pattern, out_path)

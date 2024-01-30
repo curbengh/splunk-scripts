@@ -51,9 +51,9 @@ def exclusion(tarinfo):
 
         # except for scripts
         # tarinfo uses posix (not nt)
-        if tarinfo.name.startswith(posixjoin(app, "bin")) and path.splitext(
+        if tarinfo.name.startswith(posixjoin(app, "bin")) and PurePath(
             tarinfo.name
-        )[-1] in (".sh", ".ps1", ".cmd", ".bat", ".py"):
+        ).suffix in (".sh", ".ps1", ".cmd", ".bat", ".py"):
             tarinfo.mode = 0o744
     if tarinfo.isdir():
         # remove write permission from group & world
@@ -62,32 +62,32 @@ def exclusion(tarinfo):
     return tarinfo
 
 
-def find_ca_cert(dir_arg):
+def find_ca_cert(dir_arg: Path):
     """Locate ca-certificates.crt in parent folder of app folder"""
 
     for i in range(2):
-        cert_path = path.join(PurePath(dir_arg).parents[i], "ca-certificates.crt")
+        cert_path = dir_arg.absolute().parents[i].joinpath("ca-certificates.crt")
         if path.isfile(cert_path):
             return cert_path
     return ""
 
 
-def main(**kwargs):
+def main(**kwargs: Path | str) -> Path:
     """
-    :param directory (str) Path to Splunk app
-    :param output (str) Output folder
+    :param directory (Path | str) Path to Splunk app
+    :param output (Path | str) Output folder
     """
 
     cwd = getcwd()
 
-    directory = kwargs.get("directory", cwd)
-    app_name = PurePath(directory).parts[-1]
+    directory = Path(kwargs.get("directory", cwd))
+    app_name = directory.name
     output_dir = Path(kwargs.get("output", cwd))
-    if not path.isdir(output_dir):
+    if not output_dir.is_dir():
         output_dir.mkdir(mode=0o755, parents=True)
 
     pkg_file = f"{app_name}{get_version(directory)}.tar.gz"
-    output_gz = path.join(output_dir, pkg_file)
+    output_gz = output_dir.joinpath(pkg_file)
 
     with tarfile.open(output_gz, "w:gz") as tar:
         # arcname: rename directory to app_name
@@ -101,8 +101,8 @@ def main(**kwargs):
                 filter=exclusion,
             )
 
-    print(f"Created {path.abspath(output_gz)}")
-    return path.abspath(output_gz)
+    print(f"Created {output_gz.absolute()}")
+    return output_gz.absolute()
 
 
 if __name__ == "__main__":

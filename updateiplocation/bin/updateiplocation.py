@@ -6,20 +6,21 @@ import sys
 import tarfile
 from hashlib import sha256
 from io import BytesIO
-from os import environ, path
+from os import environ
+from pathlib import Path
 from time import time
 
 from requests import get
 from requests.exceptions import ConnectionError as RequestsConnectionError
 from requests.exceptions import HTTPError, RequestException, Timeout
 
-sys.path.insert(0, path.join(path.dirname(__file__), "..", "lib"))
+sys.path.insert(0, str(Path(__file__).parent.joinpath("..", "lib").resolve()))
 from splunklib.searchcommands import Configuration, GeneratingCommand, dispatch
 
 # Do not change this, see "maxmind-license.py"
 LICENSE_USERNAME = "maxmind"
 
-MMDB_PATH = path.join(environ.get("SPLUNK_HOME"), "share")
+MMDB_PATH = Path(environ.get("SPLUNK_HOME")).joinpath("share")
 
 
 @Configuration()
@@ -39,7 +40,7 @@ class UpdateGeoIP(GeneratingCommand):
     def __get_mmdb(self, members):
         """Return the {tarfile.TarInfo} mmdb file found in a gzip"""
         for tarinfo in members:
-            if path.splitext(tarinfo.name)[1] == ".mmdb":
+            if Path(tarinfo.name).suffix == ".mmdb":
                 # Avoid replacing the default database "GeoLite2-City.mmdb"
                 # Custom path needs to be specified in $SPLUNK_HOME/etc/system/local/limits.conf
                 tarinfo.name = "GeoLite2-City-latest.mmdb"

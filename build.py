@@ -67,7 +67,7 @@ def find_ca_cert(dir_arg: Path):
 
     for i in range(2):
         cert_path = dir_arg.absolute().parents[i].joinpath("ca-certificates.crt")
-        if path.isfile(cert_path):
+        if cert_path.is_file():
             return cert_path
     return ""
 

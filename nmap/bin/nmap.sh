@@ -13,7 +13,13 @@ for port in $ports; do
   # "-z" requires GNU sed
   # remove prefix, suffix, host status (so that it port state is parsed instead)
   # hosthint element may not exist
-  sed -r -z -u -e 's@.*(</hosthint>|<debugging level="[[:digit:]]+"/>)\n<host @<host @g' -e 's|<runstats>.*||g' -e 's|<status state="[[:alpha:]]+" reason="[[:alpha:]-]+" reason_ttl="[[:digit:]]+"/>||g' -i "$xml_location"
+  sed -r -z -u \
+    -e 's@.*(</hosthint>|<debugging level="[[:digit:]]+"/>)\n<host @<host @g' \
+    -e 's|<runstats>.*||g' \
+    -e 's|<status state="([[:alpha:]]+)" reason="([[:alpha:]-]+)" reason_ttl="([[:digit:]]+)"/>|<status host_state="\1" host_reason="\2" host_reason_ttl="\3"/>|g' \
+    -e 's/<hostname name=/<hostname hostname=/g' \
+    -e 's/<service name=/<service service_name=/g' \
+    -i "$xml_location"
 
   # save to monitored folder only after sed,
   # otherwise splunk will ingest partial output while nmap is running

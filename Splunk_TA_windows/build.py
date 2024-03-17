@@ -103,6 +103,11 @@ def main(**kwargs):
                     filter=exclusion,
                     arcname=posixjoin(app, "local", "inputs.conf"),
                 )
+                tar.add(
+                    path.join(script_dir, "lookups"),
+                    filter=exclusion,
+                    arcname=posixjoin(app, "lookups"),
+                )
 
             print(f'Created "{new_gz}"')
 
@@ -164,6 +169,11 @@ def main(**kwargs):
                     path.join(script_dir, "inputs.conf"),
                     filter=exclusion,
                     arcname=posixjoin(new_app_id, "default", "inputs.conf"),
+                )
+                tar.add(
+                    path.join(script_dir, "lookups"),
+                    filter=exclusion,
+                    arcname=posixjoin(new_app_id, "lookups"),
                 )
 
             print(f'Created "{new_cloud_gz}"')

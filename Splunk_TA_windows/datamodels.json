@@ -1,0 +1,40 @@
+{
+  "modelName": "Authentication",
+  "displayName": "Authentication",
+  "description": "Authentication Data Model",
+  "objects": [
+    {
+      "objectName": "Authentication",
+      "displayName": "Authentication",
+      "parentName": "BaseEvent",
+      "comment": { "tags": ["authentication"] },
+      "fields": [
+        {
+          "fieldName": "authentication_signature_id",
+          "owner": "Authentication",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "authentication_signature_id",
+          "comment": ""
+        },
+        {
+          "fieldName": "authentication_signature",
+          "owner": "Authentication",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "authentication_signature",
+          "comment": ""
+        }
+      ],
+      "lineage": "Authentication"
+    }
+  ]
+}

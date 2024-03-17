@@ -6,6 +6,8 @@ nmap is executed per-port basis (`nmap -p20`) instead of all ports (`nmap -p20,2
 
 [nmap.sh](./bin/nmap.sh) runs the default [TCP SYN/connect](https://nmap.org/book/man-port-scanning-techniques.html) scan. To run more than one scanning technique (e.g. TCP+UDP), run nmap separately (e.g. `nmap -sT` + `nmap -sU`).
 
+Specify targets in [nmap-targets.csv](./lookups/nmap-targets.csv), it can be modified on Splunk Web using [Splunk App for Lookup File Editing](https://splunkbase.splunk.com/app/1724).
+
 ## See also
 
 [XtremeNmapParser](https://github.com/xtormin/XtremeNmapParser): Parse nmap XML to CSV/XLSX/JSON. This is currently not used, to keep things simple.

@@ -1,14 +1,15 @@
 #!/bin/sh
 
 ports="21 23"
-subnets="192.168.1.0/24 192.168.2.0/24 192.168.3.0/24"
+csv="$(realpath $(dirname $0)/../lookups/nmap-targets.csv)"
+targets="$(cat $csv | tail -n +2 | cut -d',' -f1 | sed -z 's/\n/ /g')"
 
 mkdir -p "$SPLUNK_HOME/var/log/nmap/"
 
 for port in $ports; do
   xml_location="/tmp/nmap_port${port}_$(date +%Y%m%d-%H%M%S).xml"
 
-  nmap -p"$port" -sV -oX "$xml_location" -R --system-dns $subnets > /dev/null
+  nmap -p"$port" -sV -oX "$xml_location" -R --system-dns $targets > /dev/null
 
   # "-z" requires GNU sed
   # remove prefix, suffix, host status (so that it port state is parsed instead)

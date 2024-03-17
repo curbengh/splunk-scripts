@@ -1,0 +1,4 @@
+Target,Comment
+scanme.nmap.org,hostname
+64.13.134.52,an IPv4
+192.168.0.0/8,an IPv4 subnet

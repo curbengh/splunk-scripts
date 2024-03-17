@@ -32,6 +32,18 @@
           "editable": true,
           "displayName": "authentication_signature",
           "comment": ""
+        },
+        {
+          "fieldName": "authentication_title",
+          "owner": "Authentication",
+          "type": "string",
+          "fieldSearch": "",
+          "required": false,
+          "multivalue": false,
+          "hidden": false,
+          "editable": true,
+          "displayName": "authentication_title",
+          "comment": ""
         }
       ],
       "lineage": "Authentication"

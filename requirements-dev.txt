@@ -1,4 +1,4 @@
 -r requirements.txt
-pre-commit == 2.*
-black == 23.*
-ruff == 0.0.*
+pre-commit == 3.*
+black == 24.*
+ruff == 0.*

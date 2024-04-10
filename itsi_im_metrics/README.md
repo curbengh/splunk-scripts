@@ -18,3 +18,7 @@ This folder contains a collection of configurations needed to collect performanc
 ## Alert
 
 - [Disk Monitor](./savedsearches.conf)
+
+## Prerequisite
+
+[ITSI](https://splunkbase.splunk.com/app/1841) addon should be installed in the indexer, either heavy forwarder or Splunk Cloud (if universal forwarder forwards directly). Even if you don't use its bundled dashboards, the addon is required to process the data before it can be saved into [metrics index](https://docs.splunk.com/Documentation/SplunkCloud/latest/Metrics/Overview).

@@ -147,6 +147,17 @@ cp "$CA_PATH" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/ca-certificates.crt"
 
 chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 
+# Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
+  apt install -y --no-upgrade "sysstat"
+elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
+  dnf install --refresh -y "sysstat"
+elif [ -n "$IS_SUSE_BASE" ]; then
+  zypper install -y "sysstat"
+elif [ "$DISTRO" = "photon" ]; then
+  tdnf install --refresh -y "sysstat"
+fi
+
 cd "../"
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 

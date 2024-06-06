@@ -54,8 +54,6 @@ tar xzf "1-deploymentserver.tar.gz" -C "$SPLUNK_HOME/etc/apps"
 
 chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 
-cp "splunkd.service" "/etc/systemd/system/splunkd.service"
-
 # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
 if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   apt install -y --no-upgrade "sysstat"
@@ -66,6 +64,8 @@ elif [ -n "$IS_SUSE_BASE" ]; then
 elif [ "$DISTRO" = "photon" ]; then
   tdnf install --refresh -y "sysstat"
 fi
+
+cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # "Executable path is not absolute" error
 # this error is fixed in Ubuntu 20.04

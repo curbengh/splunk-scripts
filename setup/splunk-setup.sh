@@ -102,7 +102,7 @@ mkdir "$SPLUNK_CERTS"
 cp "splunk-cert.pem" "$SPLUNK_CERTS/splunk-cert.pem"
 cp "splunk-cert.key" "$SPLUNK_CERTS/splunk-cert.key"
 cp "splunk-cert-web.pem" "$SPLUNK_CERTS/splunk-cert-web.pem"
-chmod 400 "$SPLUNK_CERTS/splunk-cert"*
+find "$SPLUNK_CERTS" -type f | xargs chmod 400
 
 # optional: SAML SSO
 mkdir "$SPLUNK_ETC/etc/auth/idpCerts"

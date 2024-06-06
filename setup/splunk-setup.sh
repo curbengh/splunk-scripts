@@ -50,6 +50,11 @@ SPLUNK_CERTS="$SPLUNK_ETC/auth/mycerts"
 SPLUNK_APPS="$SPLUNK_ETC/apps"
 SPLUNK_DEPLOY_APPS="$SPLUNK_ETC/deployment-apps"
 
+CA_PATH="/etc/ssl/certs/ca-certificates.crt"
+if [ -f "/etc/ssl/certs/ca-bundle.crt" ]; then
+  CA_PATH="/etc/ssl/certs/ca-bundle.crt"
+fi
+
 cd "splunk/"
 
 cp "splunk-launch.conf" "$SPLUNK_ETC/splunk-launch.conf"
@@ -72,6 +77,7 @@ echo
 sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/inputs.conf"
 chmod 600 "$SPLUNK_SYSTEM/inputs.conf"
 sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/server.conf"
+sed -i "s/^sslRootCAPath\s*=..*/sslRootCAPath = $CA_PATH/" "$SPLUNK_SYSTEM/server.conf"
 chmod 600 "$SPLUNK_SYSTEM/server.conf"
 sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/web.conf"
 chmod 600 "$SPLUNK_SYSTEM/web.conf"
@@ -132,10 +138,10 @@ sed -i "s/sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_DEPLOY_APPS/
 SSL_PASSWORD=""
 
 # Use the latest cert store
-cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_APPS/100_splunkcloud/local/"
-cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/local/"
-cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/1-deploymentserver/local/"
-cp "/etc/ssl/certs/ca-certificates.crt" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/"
+cp "$CA_PATH" "$SPLUNK_APPS/100_splunkcloud/local/ca-certificates.crt"
+cp "$CA_PATH" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/local/ca-certificates.crt"
+cp "$CA_PATH" "$SPLUNK_DEPLOY_APPS/1-deploymentserver/local/ca-certificates.crt"
+cp "$CA_PATH" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/ca-certificates.crt"
 
 chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 

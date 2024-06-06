@@ -81,6 +81,10 @@ openssl x509 -noout -text -in splunkuf.crt
 cat splunkuf.crt splunkuf.key splunkuf-ca.crt > splunkuf.pem
 ```
 
+## Splunk Cloud Client Certificate
+
+splunkcloud_client.pem: client certificate + (host-specific private) intermediate CA + (host-specific private) root CA + public GlobalSign CA
+
 ## Could not create Splunk settings directory
 
 When trying to reload deployment server, you [may get](https://community.splunk.com/t5/Deployment-Architecture/Could-not-create-Splunk-settings-directory-at-root-splunk/m-p/599622/highlight/true#M25677) `An error occurred: Could not create Splunk settings directory at '$HOME/.splunk'.`

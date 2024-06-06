@@ -115,6 +115,8 @@ mkdir "$SPLUNK_DEPLOY_APPS"
 tar xzf "1-deploymentserver.tar.gz" -C "$SPLUNK_DEPLOY_APPS"
 tar xzf "1-indexserver.tar.gz" -C "$SPLUNK_DEPLOY_APPS"
 tar xzf "100_splunkcloud.tar.gz" -C "$SPLUNK_DEPLOY_APPS"
+# client cert
+cp "../certs/splunkcloud_client.pem" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/default/splunkcloud_client.pem"
 
 # forward logs to heavy forwarder
 stty -echo

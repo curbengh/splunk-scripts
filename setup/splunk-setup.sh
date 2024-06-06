@@ -41,7 +41,6 @@ if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   usermod --append --groups "adm" "$SPLUNK_USER"
 fi
 
-tar xzf "splunk-setup-all.tar.gz"
 tar xzf splunk-9*-Linux-x86_64.tgz -C "/opt"
 
 SPLUNK_ETC="$SPLUNK_HOME/etc"
@@ -82,6 +81,7 @@ chmod 600 "$SPLUNK_SYSTEM/server.conf"
 sed -i "s/^sslPassword\s*=..*/sslPassword = $SSL_PASSWORD/" "$SPLUNK_SYSTEM/web.conf"
 chmod 600 "$SPLUNK_SYSTEM/web.conf"
 
+cd "../"
 tar xzf "100_splunkcloud.tar.gz" -C "$SPLUNK_APPS"
 
 # optional: customise login background
@@ -145,6 +145,7 @@ cp "$CA_PATH" "$SPLUNK_DEPLOY_APPS/1-indexserver/local/ca-certificates.crt"
 
 chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 
+cd "../"
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # "Executable path is not absolute" error

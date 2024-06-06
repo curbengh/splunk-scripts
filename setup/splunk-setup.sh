@@ -2,7 +2,19 @@
 
 # Run this in the splunk host as root
 
-set -efux
+# dash does not support pipefail
+# this does not work in `dash script.sh`
+IS_DASH=$(readlink -f "/bin/sh" | grep "dash" || [ $? = 1 ])
+if [ -n "$IS_DASH" ]; then
+  set -efx
+else
+  set -efx -o pipefail
+fi
+
+# bash does not expand alias by default for non-interactive script
+if [ -n "$BASH_VERSION" ]; then
+  shopt -s expand_aliases
+fi
 
 alias cp="cp -f"
 alias mkdir="mkdir -p"

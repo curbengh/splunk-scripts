@@ -2,7 +2,19 @@
 
 # Run this in the splunk host as root
 
-set -efux
+# dash does not support pipefail
+# this does not work in `dash script.sh`
+IS_DASH=$(readlink -f "/bin/sh" | grep "dash" || [ $? = 1 ])
+if [ -n "$IS_DASH" ]; then
+  set -efx
+else
+  set -efx -o pipefail
+fi
+
+# bash does not expand alias by default for non-interactive script
+if [ -n "$BASH_VERSION" ]; then
+  shopt -s expand_aliases
+fi
 
 alias cp="cp -f"
 alias mkdir="mkdir -p"
@@ -67,10 +79,10 @@ elif [ -n "$IS_SUSE_BASE" ]; then
   UPDATE_CERT="update-ca-certificates"
 fi
 mkdir "$CERT_PATH"
-# Enterprise and Splunk Cloud root CA
+# Enterprise root CA
 cp "enterprise_root_cacert.crt" "$CERT_PATH/enterprise_cacert.crt"
 cp "enterprise_intermediate_cacert.crt" "$CERT_PATH/enterprise_intermediate_cacert.crt"
-# 100_splunkcloud
+# Splunk Cloud root CA
 cp "100_splunkcloud_root_cacert.crt" "$CERT_PATH/100_splunkcloud_root_cacert.crt"
 cp "100_splunkcloud_intermediate_cacert.crt" "$CERT_PATH/100_splunkcloud_intermediate_cacert.crt"
 # UF CA

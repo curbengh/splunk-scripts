@@ -109,14 +109,14 @@ mkdir "$SPLUNK_ETC/etc/auth/idpCerts"
 cp "idpCert.pem" "$SPLUNK_ETC/etc/auth/idpCerts/idpCert.pem"
 
 # Deployment apps
-cd "../deployment-apps"
+cd "../"
 
 mkdir "$SPLUNK_DEPLOY_APPS"
 tar xzf "1-deploymentserver.tar.gz" -C "$SPLUNK_DEPLOY_APPS"
 tar xzf "1-indexserver.tar.gz" -C "$SPLUNK_DEPLOY_APPS"
 tar xzf "100_splunkcloud.tar.gz" -C "$SPLUNK_DEPLOY_APPS"
 # client cert
-cp "../certs/splunkcloud_client.pem" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/default/splunkcloud_client.pem"
+cp "certs/splunkcloud_client.pem" "$SPLUNK_DEPLOY_APPS/100_splunkcloud/default/splunkcloud_client.pem"
 
 # forward logs to heavy forwarder
 stty -echo
@@ -158,7 +158,6 @@ elif [ "$DISTRO" = "photon" ]; then
   tdnf install --refresh -y "sysstat"
 fi
 
-cd "../"
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"
 
 # "Executable path is not absolute" error

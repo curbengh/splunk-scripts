@@ -1,4 +1,4 @@
-# Iplocation Database Update
+# IPlocation Database Update
 
 A simple add-on to update iplocation database. I created this mostly to learn about [credential storage](https://dev.splunk.com/enterprise/docs/developapps/manageknowledge/secretstorage/secretstoragepython). It's probably better to use [Auto Update MaxMind Database](https://splunkbase.splunk.com/app/5482) app instead, though I've never used it.
 
@@ -29,7 +29,7 @@ db_path = /opt/splunk/share/GeoLite2-City-latest.mmdb
 # db_path = C:\Splunk\share\GeoLite2-City-latest.mmdb
 ```
 
-## [naxmind-license](./maxmind-license.py)
+## [maxmind-license](./maxmind-license.py)
 
 _[Install](#install) the addon before running this._
 
@@ -57,6 +57,7 @@ maxmind-license.py
 ```
 
 1. Prompt for Splunk credential.
+   - User should have [`edit_storage_passwords`](https://docs.splunk.com/Documentation/Splunk/9.2.1/Installation/AboutupgradingREADTHISFIRST#A_new_capability_has_been_added_that_lets_you_edit_passwords_stored_within_an_app) permission.
 2. Prompt for license key.
 3. Check license validity.
 4. If existing license exists, ask if want to update it.

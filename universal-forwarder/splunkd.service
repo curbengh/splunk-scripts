@@ -29,7 +29,8 @@ Delegate=true
 DevicePolicy=closed
 KeyringMode=private
 LockPersonality=yes
-MemoryDenyWriteExecute=yes
+# required since v9.1 to run execstack on the bundled OpenSSL 1.0.2
+# MemoryDenyWriteExecute=no
 NoNewPrivileges=true
 PrivateDevices=true
 PrivateMounts=yes

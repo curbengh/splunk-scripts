@@ -72,17 +72,15 @@ def find_ca_cert(dir_arg: Path):
     return ""
 
 
-def main(**kwargs: Path | str) -> Path:
+def main(directory: Path | str = getcwd(), output: Path | str = getcwd()) -> Path:
     """
-    :param directory (Path | str) Path to Splunk app
-    :param output (Path | str) Output folder
+    :param directory: Path to Splunk app
+    :param output: Output folder
     """
 
-    cwd = getcwd()
-
-    directory = Path(kwargs.get("directory", cwd))
+    directory = Path(directory)
     app_name = directory.name
-    output_dir = Path(kwargs.get("output", cwd))
+    output_dir = Path(output)
     if not output_dir.is_dir():
         output_dir.mkdir(mode=0o755, parents=True)
 

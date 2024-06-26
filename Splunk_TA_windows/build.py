@@ -46,20 +46,20 @@ def exclusion(tarinfo):
     return tarinfo
 
 
-def main(**kwargs):
+def main(input: str = "", cloud: bool = False):
     """
-    :param input (str) Path to the downloaded Splunk app
-    :param cloud (bool) Create Splunk Cloud-compatible app
+    :param input: Path to the downloaded Splunk app
+    :param cloud: Create Splunk Cloud-compatible app
     """
 
-    app_gz = kwargs.get("input", "")
+    app_gz = input
     while not path.isfile(app_gz):
         print(
             "Download the latest [Splunk Add-on for Microsoft Windows]"
             "(https://splunkbase.splunk.com/app/742) with a Splunk.com account."
         )
         app_gz = input("Path to splunk-add-on-for-microsoft-windows_*.tgz: ")
-    is_cloud = kwargs.get("cloud", False)
+    is_cloud = cloud
 
     app_dir, app_filename = path.split(app_gz)
     version = PurePath(app_filename).stem.split("_")[-1]

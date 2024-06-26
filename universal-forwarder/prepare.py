@@ -26,7 +26,7 @@ def exclusion(tarinfo):
     # exclude certain folders/files
     pathname = tarinfo.name
     if search(
-        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements|prepare\.py|splunkuf-setup-all|install_universal_forwarder",
+        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements|prepare\.py|splunkuf-setup-all",
         pathname,
     ):
         return None
@@ -69,7 +69,7 @@ def glob(pattern, out_path=""):
     return glob(pattern, out_path)
 
 
-def windows():
+def build_windows():
     uf_msi = glob("splunkforwarder-*-x64-release.msi")
     uf_version = search(r"splunkforwarder-([^-]+)", uf_msi).group(1)
     out_zip = path.join(
@@ -96,7 +96,7 @@ def windows():
     print("Unzip it and run install_universal_forwarder.ps1")
 
 
-def linux():
+def build_linux():
     uf_gz = glob("splunkforwarder-*-Linux-x86_64.tgz")
     uf_version = search(r"splunkforwarder-([^-]+)", uf_gz).group(1)
     output_gz = path.join(
@@ -122,27 +122,24 @@ def linux():
 
     print(f'Created "{output_gz}"')
     print(
-        "\nTo install Universal Forwarder, copy install_universal_forwarder.sh"
-        f" and {path.basename(output_gz)} to the device."
+        f"\nTo install Universal Forwarder, {path.basename(output_gz)} to the device."
     )
     print("Then execute the shell script as root.")
 
 
-def main(**kwargs):
+def main(windows: bool = False, linux: bool = False):
     """
-    :param windows (bool) Prepare Windows setup
-    :param linux (bool) Prepare Linux setup
+    :param windows: Prepare Windows setup
+    :param linux: Prepare Linux setup
     """
 
-    is_windows = kwargs.get("windows", False)
-    is_linux = kwargs.get("linux", False)
-    if is_windows is False and is_linux is False:
-        is_windows = True
+    if windows is False and linux is False:
+        windows = True
 
-    if is_windows:
-        windows()
-    if is_linux:
-        linux()
+    if windows:
+        build_windows()
+    if linux:
+        build_linux()
 
 
 if __name__ == "__main__":

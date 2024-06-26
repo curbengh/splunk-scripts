@@ -17,6 +17,7 @@ from requests.exceptions import HTTPError, RequestException, Timeout
 from splunklib import client
 from splunklib.binding import AuthenticationError
 from splunklib.binding import HTTPError as SplunkHTTPError
+from splunklib.client import Service
 
 # username to identify the license key stored as a password
 # this is not your MaxMind account login
@@ -29,11 +30,24 @@ NAMESPACE = {
 }
 
 
-def main(**kwargs):
-    """Main function"""
+def main(
+    host: str = "https://localhost:8089",
+    verify: bool = False,
+    skip_validate: bool = False,
+    check_key: bool = False,
+    delete: bool = False,
+    update: bool = False,
+):
+    """
+    :param host: Prepare Windows setup
+    :param verify: Prepare Linux setup
+    :param skip_validate:
+    :param check_key:
+    :param delete:
+    :param update:
+    """
 
-    host = urlparse(kwargs.get("host", "https://localhost:8089"))
-    verify = kwargs.get("verify", False)
+    host = urlparse(host)
     login_params = {
         "host": host.hostname or "localhost",
         "port": host.port or 8089,
@@ -41,10 +55,8 @@ def main(**kwargs):
         "verify": verify,
     }
 
-    validate = not kwargs.get("skip_validate", False)
-    check_key = kwargs.get("check_key", False)
-    delete = kwargs.get("delete", False)
-    always_update = kwargs.get("update", False)
+    validate = not skip_validate
+    always_update = update
 
     if check_key:
         license_key = prompt_license()
@@ -65,18 +77,24 @@ def main(**kwargs):
 
 
 # pylint:disable=inconsistent-return-statements
-def login(**login_params):
+def login(
+    host: str = "localhost",
+    port: int = 8089,
+    scheme: str = "https",
+    verify: bool = False,
+):
     """
     Connect to the Splunk management endpoint.
 
-    Arguments:
-        host {str} -- The host name.
-        port {int} -- The port number.
-        scheme {"https" or "http"} -- The scheme for accessing the service.
-        verify {bool} -- SSL verification for https connections.
+    :param host: Splunk hostname.
+    :param port: Splunk port.
+    :param scheme: The scheme for accessing the service, https or http.
+    :param verify: Enable SSL verification for https connections.
 
     Return an authenticated {splunklib.client.Service} connection
     """
+
+    login_params = {"host": host, "port": port, "scheme": scheme, "verify": verify}
 
     print("The user's role must have 'admin_all_objects' capability.")
     username = input("Username: ")
@@ -114,7 +132,7 @@ def login(**login_params):
 
 
 # Unused, it may be more efficient through error catching
-# def has_license(service):
+# def has_license(service: Service) -> bool:
 #     """Return true if there is an existing license key"""
 #     storage_passwords = service.storage_passwords
 #     for storage_password in storage_passwords.list():
@@ -124,18 +142,21 @@ def login(**login_params):
 #     return False
 
 
-def add_license(service, license_key, validate=True, always_update=False):
+def add_license(
+    service: Service,
+    license_key: str,
+    validate: bool = True,
+    always_update: bool = False,
+):
     """
     Add license key to credential storage
 
-    Arguments:
-        service {splunklib.client.Service} -- Authenticated Splunk connection
-        license_key {str} -- License key
-
-    Optional arguments:
-        validate {bool} -- Validate license key, default: True
-        always_update {bool} -- Add license key even if there is an existing license key, default: False
+    :param service: Authenticated Splunk connection
+    :param license_key: License key
+    :param validate: Validate license key, default: True
+    :param always_update: Add license key even if there is an existing license key, default: False
     """
+
     if validate and is_maxmind_up() and not is_valid_license(license_key):
         return
     if validate is False or not is_maxmind_up():
@@ -170,7 +191,7 @@ def add_license(service, license_key, validate=True, always_update=False):
         )
 
 
-def delete_license(service):
+def delete_license(service: Service):
     """Delete license key"""
     try:
         service.storage_passwords.delete(LICENSE_USERNAME)
@@ -181,7 +202,7 @@ def delete_license(service):
         raise err
 
 
-def prompt_license(license_key=""):
+def prompt_license(license_key: str = ""):
     """Prompt for license key if no argument or invalid key format"""
     if not (isinstance(license_key, str) and len(license_key) == 16):
         if len(license_key) >= 1:
@@ -200,13 +221,10 @@ def prompt_retry():
     return False
 
 
-def is_valid_license(license_key=""):
+def is_valid_license(license_key: str = "") -> bool:
     """
     Attempts to download GeoLite2-City.tar.gz.sha256 using the license_key
     Return true if download is okay.
-
-    Optional arguments:
-        license_key {str} -- default: ""
     """
 
     license_key = prompt_license(license_key)
@@ -240,7 +258,7 @@ def is_valid_license(license_key=""):
         return prompt_retry()
 
 
-def is_maxmind_up():
+def is_maxmind_up() -> bool:
     """Return true if download.maxmind.com is reachable"""
     try:
         res = get("https://download.maxmind.com", timeout=5)
@@ -293,5 +311,4 @@ if __name__ == "__main__":
         "--delete", "-d", help="Delete existing license key.", action="store_true"
     )
 
-    kwargs = vars(parser.parse_args())
-    main(**kwargs)
+    main(**vars(parser.parse_args()))

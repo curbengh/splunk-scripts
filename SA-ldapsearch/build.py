@@ -62,12 +62,12 @@ def exclusion(tarinfo):
     return tarinfo
 
 
-def main(**kwargs):
+def main(input: str = ""):
     """
-    :param input (str) Path to the downloaded Splunk app
+    :param input: Path to the downloaded Splunk app
     """
 
-    app_gz = kwargs.get("input", "")
+    app_gz = input
     while not path.isfile(app_gz):
         print(
             "Download the latest [Splunk Supporting Add-on for Active Directory]",

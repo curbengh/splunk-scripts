@@ -1,0 +1,81 @@
+signature_id,signature,type,action
+source_url,https://www.arubanetworks.com/techdocs/ClearPass/6.9/PolicyManager/Content/CPPM_UserGuide/SNMP_MIB_Events_Errors/Error_Codes.htm,,
+0,Success,Success,success
+101,Failed to perform service classification,Internal Error,failure
+102,Failed to perform policy evaluation,Internal Error,failure
+103,Failed to perform posture notification,Internal Error,failure
+104,Failed to query authstatus,Internal Error,failure
+105,Internal error in performing authentication,Internal Error,failure
+106,Internal error in RADIUS server,Internal Error,failure
+201,User not found,Authentication failure,failure
+202,Password mismatch,Authentication failure,failure
+203,Failed to contact Authentication Source,Authentication failure,failure
+204,Failed to classify request to service,Authentication failure,failure
+205,Authentication Source not configured for service,Authentication failure,failure
+206,Access denied by policy,Authentication failure,failure
+207,Failed to get client MAC Address in order to perform Web authentication,Authentication failure,failure
+208,No response from home server,Authentication failure,failure
+209,No password in request,Authentication failure,failure
+210,Unknown CA in client certificate,Authentication failure,failure
+211,Client certificate not valid,Authentication failure,failure
+212,Client certificate has expired,Authentication failure,failure
+213,Certificate comparison failed,Authentication failure,failure
+214,No certificate in authentication source,Authentication failure,failure
+215,TLS session error,Authentication failure,failure
+216,User authentication failed,Authentication failure,failure
+217,Search failed due to insufficient permissions,Authentication failure,failure
+218,Authentication source timed out,Authentication failure,failure
+219,Bad search filter,Authentication failure,failure
+220,Search failed,Authentication failure,failure
+221,Authentication source error,Authentication failure,failure
+222,Password change error,Authentication failure,failure
+223,Username not available in request,Authentication failure,failure
+224,CallingStationID not available in request,Authentication failure,failure
+225,User account disabled,Authentication failure,failure
+226,User account expired or not active yet,Authentication failure,failure
+227,User account needs approval,Authentication failure,failure
+228,User account has exceeded bandwidth limit,Authentication failure,failure
+229,User account has exceeded session duration limit,Authentication failure,failure
+230,User account has exceeded session count limit,Authentication failure,failure
+5001,Internal Error,Command and Control,failure
+5002,Invalid MAC Address,Command and Control,failure
+5003,Invalid request received,Command and Control,failure
+5004,Insufficient parameters received,Command and Control,failure
+5005,Query - No MAC address record found,Command and Control,failure
+5006,Query - No supported actions,Command and Control,failure
+5007,Query - Cannot fetch MAC address details,Command and Control,failure
+5008,Request: MAC address not online,Command and Control,failure
+5009,Request: No MAC address record found,Command and Control,failure
+6001,Unsupported TACACS parameter in request,TACACS Protocol,failure
+6002,Invalid sequence number,TACACS Protocol,failure
+6003,Sequence number overflow,TACACS Protocol,failure
+6101,Not enough inputs to perform authentication,TACACS Authentication,failure
+6102,Authentication privilege level mismatch,TACACS Authentication,failure
+6103,No enforcement profiles matched to perform authentication,TACACS Authentication,failure
+6201,Authorization failed as session is not authenticated,TACACS Authorization,failure
+6202,Authorization privilege level mismatch,TACACS Authorization,failure
+6203,Command not allowed,TACACS Authorization,failure
+6204,No enforcement profiles matched to perform command authorization,TACACS Authorization,failure
+6301,New password entered does not match,TACACS Change Password,failure
+6302,Empty password,TACACS Change Password,failure
+6303,Change password allowed only for local users,TACACS Change Password,failure
+6304,Internal error in performing change password,TACACS Change Password,failure
+9001,Wrong shared secret,RADIUS Protocol,failure
+9002,Request timed out,RADIUS Protocol,failure
+9003,Phase 2 PAC failure,RADIUS Protocol,failure
+9004,Client rejected after PAC provisioning,RADIUS Protocol,failure
+9005,Client does not support posture request,RADIUS Protocol,failure
+9006,Received error TLV from client,RADIUS Protocol,failure
+9007,Received failure TLV from client,RADIUS Protocol,failure
+9008,Phase 2 PAC not found,RADIUS Protocol,failure
+9009,Unknown Phase 2 PAC,RADIUS Protocol,failure
+9010,Invalid Phase 2 PAC,RADIUS Protocol,failure
+9011,PAC verification failed,RADIUS Protocol,failure
+9012,PAC binding failed,RADIUS Protocol,failure
+9013,Session resumption failed,RADIUS Protocol,failure
+9014,Cached session data error,RADIUS Protocol,failure
+9015,Client does not support configured EAP methods,RADIUS Protocol,failure
+9016,Client did not send Cryptobinding TLV,RADIUS Protocol,failure
+9017,Failed to contact OCSP Server,RADIUS Protocol,failure
+9018,RADIUS protocol error,RADIUS Protocol,failure
+9019,Client sent conflicting identities,RADIUS Protocol,failure

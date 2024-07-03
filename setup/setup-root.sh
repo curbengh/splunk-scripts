@@ -28,6 +28,8 @@ IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 
 cp "hosts" "/etc/hosts"
+# prefer shortname
+hostnamectl set-hostname splunkhostname --static
 
 # optional: use static host key
 # `HostKey /etc/ssh/splunk_host_ed25519_key` must be set in sshd_config

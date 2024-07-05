@@ -58,7 +58,11 @@ chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   apt install -y --no-upgrade "sysstat"
 elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
-  dnf install --refresh -y "sysstat"
+  if ! command -v dnf &> /dev/null
+  then
+    alias dnf="yum"
+  fi
+  dnf install -y "sysstat"
 elif [ -n "$IS_SUSE_BASE" ]; then
   zypper install -y "sysstat"
 elif [ "$DISTRO" = "photon" ]; then

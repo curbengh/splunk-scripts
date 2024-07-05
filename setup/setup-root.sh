@@ -44,31 +44,6 @@ rm "/etc/ssh/sshd_config.d/50-cloud-init.conf"
 cp "sshd_config" "/etc/ssh/splunk_host_ed25519_key"
 echo "Installed SSH host key"
 
-# optional: join AD
-SSSD="sssd-ad sssd-tools realmd adcli"
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
-  apt install -y --no-upgrade "$SSSD"
-elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
-  dnf install --refresh -y "$SSSD"
-elif [ -n "$IS_SUSE_BASE" ]; then
-  zypper install -y "$SSSD"
-fi
-
-mkdir "/etc/sudoers.d/"
-cp "sudoers" "/etc/sudoers.d/ad_group"
-echo 'Installed "/etc/sudoers.d/ad_group"'
-
-mkdir "/etc/sssd"
-cp "sssd.conf" "/etc/sssd/sssd.conf"
-systemctl reload sssd.service
-echo 'Installed "/etc/sssd/sssd.conf"'
-
-read -p 'Domain Admin username (enter "n" to skip): ' domain_admin
-if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
-  realm join -v "domain.example" -U "$domain_admin"
-  echo "Joined Example AD domain"
-fi
-
 if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"

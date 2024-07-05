@@ -29,6 +29,7 @@ DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
+IS_ARCH_BASE=$(printf "$DISTRO_BASE" | grep "arch" || [ $? = 1 ])
 
 # Create "splunkfwd" user without password and shell
 # Splunk app can still run shell scripts even without shell
@@ -67,6 +68,8 @@ elif [ -n "$IS_SUSE_BASE" ]; then
   zypper install -y "sysstat"
 elif [ "$DISTRO" = "photon" ]; then
   tdnf install --refresh -y "sysstat"
+elif [ "$DISTRO" = "arch" ] || [ -n "$IS_ARCH_BASE" ]; then
+  pacman -Sy --noconfirm "sysstat"
 fi
 
 cp "splunkd.service" "/etc/systemd/system/splunkd.service"

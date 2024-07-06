@@ -46,7 +46,7 @@ if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   cp "/tmp/microsoft.list" "/etc/apt/sources.list.d/microsoft-prod.list"
 
   # https://learn.microsoft.com/en-us/defender-endpoint/linux-install-manually#ubuntu-and-debian-systems
-  KEYRING=$(grep -ioP 'signed-by="?\K[^\s\]"]+' "/tmp/microsoft.list" || [ $? = 1 ])
+  KEYRING=$(grep -ioP "signed-by=[\"']?\K[^\s\]\"']+" "/tmp/microsoft.list" || [ $? = 1 ])
   if [ -z "$KEYRING" ]; then
     KEYRING="/etc/apt/trusted.gpg.d/microsoft.gpg"
   fi

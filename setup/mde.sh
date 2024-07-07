@@ -107,6 +107,11 @@ elif [ -n "$IS_SUSE_BASE" ]; then
   rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
 
   zypper install -y -l "mdatp"
+else
+  echo "Unsupported distro $DISTRO $DISTRO_VERSION"
+  echo "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-linux#system-requirements"
+  # https://github.com/microsoft/mdatp-xplat/blob/0380eeea77666c9202e4973935581fccaa384560/linux/installation/mde_installer.sh#L46
+  exit 10
 fi
 
 # https://learn.microsoft.com/en-us/defender-endpoint/linux-install-manually#client-configuration

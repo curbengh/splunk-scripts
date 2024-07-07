@@ -32,10 +32,22 @@ IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 IS_OPENSUSE=$(printf "$DISTRO" | grep "^opensuse" || [ $? = 1 ])
 
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
-  # Pop!_OS
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] || [ -n "$IS_UBUNTU_BASE" ]; then
+  # Pop!_OS & Linux Mint
   if [ -n "$IS_UBUNTU_BASE" ]; then
+    if [ "$DISTRO" = "linuxmint" ]; then
+      # LM 20 = Ubuntu 20.04, LM 22 = Ubuntu 24.04
+      DISTRO_VERSION=$(echo "$MAJOR_VERSION * 2 - 20 + 0.04" | bc)
+    fi
+
     DISTRO="ubuntu"
+  fi
+
+  # LMDE
+  if [ "$DISTRO" = "linuxmint" ]; then
+    DISTRO="debian"
+    # LMDE 6 = Debian 12
+    DISTRO_VERSION="$(($DISTRO_VERSION + 6))"
   fi
 
   mkdir "/etc/apt/sources.list.d/"
@@ -61,9 +73,12 @@ elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
     DISTRO="rhel"
   fi
 
-  # packages.microsoft.com/config/almalinux/ does not exist
   if [ "$DISTRO" = "almalinux" ]; then
     DISTRO="alma"
+  elif [ "$DISTRO" = "amzn" ]; then
+    DISTRO="amazonlinux"
+  elif [ "$DISTRO" = "ol" ]; then
+    DISTRO="rhel"
   fi
 
   # packages.microsoft.com/config/rhel/9.4/ does not exist

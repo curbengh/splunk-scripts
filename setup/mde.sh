@@ -83,9 +83,8 @@ elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
 
   # packages.microsoft.com/config/rhel/9.4/ does not exist
   DISTRO_VERSION="$MAJOR_VERSION"
-  DNF_REPO="https://packages.microsoft.com/config/$DISTRO/$DISTRO_VERSION/prod.repo"
 
-  dnf config-manager --add-repo "$DNF_REPO"
+  dnf config-manager --add-repo "https://packages.microsoft.com/config/$DISTRO/$DISTRO_VERSION/prod.repo"
   rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
 
   dnf install --refresh -y "mdatp"

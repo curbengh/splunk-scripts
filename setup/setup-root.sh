@@ -24,6 +24,7 @@ alias rm="rm -rf"
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
 DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
+IS_UBUNTU_BASE=$(printf "$DISTRO_BASE" | grep "ubuntu" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 
@@ -44,7 +45,7 @@ rm "/etc/ssh/sshd_config.d/50-cloud-init.conf"
 cp "sshd_config" "/etc/ssh/splunk_host_ed25519_key"
 echo "Installed SSH host key"
 
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] || [ -n "$IS_UBUNTU_BASE" ]; then
   CERT_PATH="/usr/local/share/ca-certificates"
   UPDATE_CERT="update-ca-certificates"
 elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then

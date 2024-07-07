@@ -27,6 +27,7 @@ SPLUNK_USER="splunkfwd"
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
 DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
+IS_UBUNTU_BASE=$(printf "$DISTRO_BASE" | grep "ubuntu" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])
 IS_ARCH_BASE=$(printf "$DISTRO_BASE" | grep "arch" || [ $? = 1 ])
@@ -41,7 +42,7 @@ else
 fi
 
 # Grant access to /var/log
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] || [ -n "$IS_UBUNTU_BASE" ]; then
   usermod --append --groups "adm" "$SPLUNK_USER"
 fi
 
@@ -56,7 +57,7 @@ tar xzf "1-deploymentserver.tar.gz" -C "$SPLUNK_HOME/etc/apps"
 chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"
 
 # Required by cpu_metric.sh & vmstat_metric.sh of Splunk_TA_nix
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] || [ -n "$IS_UBUNTU_BASE" ]; then
   apt install -y --no-upgrade "sysstat"
 elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
   if ! command -v dnf &> /dev/null

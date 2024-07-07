@@ -26,6 +26,7 @@ SPLUNK_USER="splunk"
 DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
 DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
+IS_UBUNTU_BASE=$(printf "$DISTRO_BASE" | grep "ubuntu" || [ $? = 1 ])
 
 # Create "splunk" user without password and shell
 # Splunk app can still run shell scripts even without shell
@@ -37,7 +38,7 @@ else
 fi
 
 # Grant access to /var/log
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] || [ -n "$IS_UBUNTU_BASE" ]; then
   usermod --append --groups "adm" "$SPLUNK_USER"
 fi
 

@@ -20,9 +20,9 @@ alias cp="cp -f"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
 
-# https://github.com/which-distro/os-release
-DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
+. "/etc/os-release"
+DISTRO="$ID"
+DISTRO_BASE="$ID_LIKE"
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
 IS_UBUNTU_BASE=$(printf "$DISTRO_BASE" | grep "ubuntu" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])

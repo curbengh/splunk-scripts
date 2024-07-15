@@ -16,8 +16,9 @@ fi
 alias cp="cp -f"
 alias mkdir="mkdir -p"
 
-DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
+. "/etc/os-release"
+DISTRO="$ID"
+DISTRO_BASE="$ID_LIKE"
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])
 IS_SUSE_BASE=$(printf "$DISTRO_BASE" | grep "suse" || [ $? = 1 ])

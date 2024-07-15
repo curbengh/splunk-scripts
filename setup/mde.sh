@@ -22,10 +22,11 @@ alias cp="cp -f"
 alias curl="curl -sSL"
 alias mkdir="mkdir -p"
 
-DISTRO=$(grep -oP '^ID="?\K\w+' "/etc/os-release")
-DISTRO_VERSION=$(grep -oP '^VERSION_ID="?\K[\w\.]+' "/etc/os-release" || [ $? = 1 ])
+. "/etc/os-release"
+DISTRO="$ID"
+DISTRO_BASE="$ID_LIKE"
+DISTRO_VERSION="$VERSION_ID"
 MAJOR_VERSION="${DISTRO_VERSION%.*}"
-DISTRO_BASE=$(grep -oP '^ID_LIKE="?\K[\w\s]+' "/etc/os-release" || [ $? = 1 ])
 IS_DEBIAN_BASE=$(printf "$DISTRO_BASE" | grep "debian" || [ $? = 1 ])
 IS_UBUNTU_BASE=$(printf "$DISTRO_BASE" | grep "ubuntu" || [ $? = 1 ])
 IS_FEDORA_BASE=$(printf "$DISTRO_BASE" | grep "fedora" || [ $? = 1 ])

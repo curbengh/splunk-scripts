@@ -13,7 +13,7 @@ from re import search
 APPS_WITH_CERT = ("1-deploymentserver", "1-indexserver", "100_splunkcloud")
 
 
-def get_version(dir_path):
+def get_version(dir_path: Path) -> str:
     """Return version number from app.conf"""
 
     app_conf_path = path.join(
@@ -28,7 +28,7 @@ def get_version(dir_path):
     return f"-{version}" if len(version) >= 1 else ""
 
 
-def exclusion(tarinfo):
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     """Exclude dev files and cache, and reset file/folder permission"""
 
     # exclude certain folders/files

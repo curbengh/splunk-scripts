@@ -39,12 +39,12 @@ def main(
     update: bool = False,
 ):
     """
-    :param host: Prepare Windows setup
-    :param verify: Prepare Linux setup
-    :param skip_validate:
-    :param check_key:
-    :param delete:
-    :param update:
+    :param host: Splunk management endpoint
+    :param verify: Verify TLS verification for https connections
+    :param skip_validate: Skip validating a license key before storing it
+    :param check_key: Validate an input license key
+    :param delete: Delete existing license key
+    :param update: Always replace license key
     """
 
     host = urlparse(host)
@@ -82,7 +82,7 @@ def login(
     port: int = 8089,
     scheme: str = "https",
     verify: bool = False,
-):
+) -> Service:
     """
     Connect to the Splunk management endpoint.
 
@@ -202,7 +202,7 @@ def delete_license(service: Service):
         raise err
 
 
-def prompt_license(license_key: str = ""):
+def prompt_license(license_key: str = "") -> str:
     """Prompt for license key if no argument or invalid key format"""
     if not (isinstance(license_key, str) and len(license_key) == 16):
         if len(license_key) >= 1:
@@ -212,7 +212,7 @@ def prompt_license(license_key: str = ""):
     return license_key
 
 
-def prompt_retry():
+def prompt_retry() -> bool:
     """Ask if user wants to retry entering license key"""
     retry = input("Retry? [y/n] ").strip()
     if retry.lower() == "y":

@@ -14,7 +14,7 @@ chdir_path = path.dirname(__file__)
 chdir(chdir_path)
 
 
-def exclusion(tarinfo):
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     """Exclude self"""
 
     # exclude certain folders/files

@@ -10,7 +10,7 @@ from os import environ
 from pathlib import Path
 from time import time
 
-from requests import get
+from requests import Response, get
 from requests.exceptions import ConnectionError as RequestsConnectionError
 from requests.exceptions import HTTPError, RequestException, Timeout
 
@@ -37,8 +37,8 @@ class UpdateGeoIP(GeneratingCommand):
 
         raise ValueError("License key not found.")
 
-    def __get_mmdb(self, members):
-        """Return the {tarfile.TarInfo} mmdb file found in a gzip"""
+    def __get_mmdb(self, members: tarfile.TarFile) -> tarfile.TarInfo:
+        """Return the mmdb file found in a gzip"""
         for tarinfo in members:
             if Path(tarinfo.name).suffix == ".mmdb":
                 # Avoid replacing the default database "GeoLite2-City.mmdb"
@@ -49,7 +49,7 @@ class UpdateGeoIP(GeneratingCommand):
             "Unable to locate any mmdb file in the downloaded gzip."
         )
 
-    def __download(self):
+    def __download(self) -> Response.content:
         """Download GeoLite2-City.tar.gz and return its binary content"""
         license_key = self.__get_license()
 

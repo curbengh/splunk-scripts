@@ -46,7 +46,7 @@ def version():
     return launcher.get("version", "")
 
 
-def exclusion(tarinfo):
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     """Exclude dev files and cache, and reset file stats"""
 
     # exclude certain folders/files

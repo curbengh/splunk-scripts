@@ -20,7 +20,7 @@ sys_path.append("..")
 from build import main as build_app  # noqa: E402
 
 
-def exclusion(tarinfo):
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     """Exclude self"""
 
     # exclude certain folders/files
@@ -47,7 +47,7 @@ def exclusion(tarinfo):
     return tarinfo
 
 
-def glob(pattern, out_path=""):
+def glob(pattern, out_path="") -> Path | str:
     filelist = list(Path(".").glob(pattern))
     pattern_ext = PurePath(pattern).suffix
     if len(filelist) >= 1:

@@ -16,14 +16,15 @@ def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     """Exclude self"""
 
     # exclude certain folders/files
-    pathname = tarinfo.name
+    name = tarinfo.name
+    pathname = PurePath(name)
     if search(
-        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements|build\.py|\.tar\.gz|\.tgz",
-        pathname,
-    ):
+        r"/\.|\\\.|__pycache__|pyproject\.toml|requirements",
+        name,
+    ) or (len(pathname.parts) == 2 and tarinfo.isfile() and pathname.suffix != ".md"):
         return None
 
-    app = PurePath(pathname).parts[0]
+    app = pathname.parts[0]
 
     # reset file stats
     tarinfo.uid = 0
@@ -35,10 +36,7 @@ def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
 
         # except for scripts
         # tarinfo uses posix (not nt)
-        if (
-            tarinfo.name.startswith(posixjoin(app, "bin"))
-            and PurePath(tarinfo.name).suffix == ".py"
-        ):
+        if name.startswith(posixjoin(app, "bin")) and pathname.suffix == ".py":
             tarinfo.mode = 0o744
     if tarinfo.isdir():
         # remove write permission from group & world

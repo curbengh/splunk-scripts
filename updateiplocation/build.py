@@ -87,7 +87,7 @@ check_call(
         "pip",
         "install",
         "--quiet",
-        "splunk-sdk == 1.*",
+        "splunk-sdk == 2.*",
         "-t",
         "lib",
         "--upgrade",

@@ -20,7 +20,7 @@ sys_path.append("..")
 from build import main as build_app  # noqa: E402
 
 
-def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo | None:
     """Exclude self"""
 
     # exclude certain folders/files

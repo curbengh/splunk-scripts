@@ -9,7 +9,7 @@ from getpass import getpass
 from os import environ, path
 from socket import gaierror
 from sys import exit as sys_exit
-from urllib.parse import urlparse
+from urllib.parse import ParseResult, urlparse
 
 from requests import get
 from requests.exceptions import ConnectionError as RequestsConnectionError
@@ -47,7 +47,7 @@ def main(
     :param update: Always replace license key
     """
 
-    host = urlparse(host)
+    host: ParseResult = urlparse(host)
     login_params = {
         "host": host.hostname or "localhost",
         "port": host.port or 8089,
@@ -55,8 +55,8 @@ def main(
         "verify": verify,
     }
 
-    validate = not skip_validate
-    always_update = update
+    validate: bool = not skip_validate
+    always_update: bool = update
 
     if check_key:
         license_key = prompt_license()

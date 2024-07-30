@@ -27,7 +27,7 @@ new_format = """'1.2.840.113556.1.4.8':             format_user_flag_enum,      
 """
 
 
-def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo | None:
     """Exclude self"""
 
     # exclude certain folders/files

@@ -12,7 +12,7 @@ from re import search
 from tempfile import TemporaryDirectory
 
 
-def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo | None:
     """Exclude self"""
 
     # exclude certain folders/files

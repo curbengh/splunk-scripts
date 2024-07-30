@@ -28,7 +28,7 @@ def get_version(dir_path: Path) -> str:
     return f"-{version}" if len(version) >= 1 else ""
 
 
-def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo | None:
     """Exclude dev files and cache, and reset file/folder permission"""
 
     # exclude certain folders/files
@@ -67,7 +67,7 @@ def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     return tarinfo
 
 
-def find_ca_cert(dir_arg: Path):
+def find_ca_cert(dir_arg: Path) -> Path | str:
     """Locate ca-certificates.crt in parent folder of app folder"""
 
     for i in range(2):

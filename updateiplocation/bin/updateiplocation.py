@@ -27,7 +27,7 @@ MMDB_PATH = Path(environ.get("SPLUNK_HOME")).joinpath("share")
 class UpdateGeoIP(GeneratingCommand):
     """Defines a search command that generates event records"""
 
-    def __get_license(self):
+    def __get_license(self) -> str:
         """Query credential storage. Return the {str} license key"""
         service = self.service
         storage_passwords = service.storage_passwords

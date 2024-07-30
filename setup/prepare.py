@@ -14,7 +14,7 @@ chdir_path = path.dirname(__file__)
 chdir(chdir_path)
 
 
-def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo | None:
     """Exclude self"""
 
     # exclude certain folders/files
@@ -44,7 +44,7 @@ def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     return tarinfo
 
 
-def glob(pattern, out_path=""):
+def glob(pattern: str, out_path: str = "") -> Path | str:
     filelist = list(Path(".").glob(pattern))
     pattern_ext = PurePath(pattern).suffix
     if len(filelist) >= 1:

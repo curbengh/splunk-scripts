@@ -12,7 +12,7 @@ from subprocess import check_call
 from sys import executable
 
 
-def version():
+def version() -> str:
     """
     Return version number from app.conf or commit hash if in CI
     """
@@ -46,7 +46,7 @@ def version():
     return launcher.get("version", "")
 
 
-def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
+def exclusion(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo | None:
     """Exclude dev files and cache, and reset file stats"""
 
     # exclude certain folders/files

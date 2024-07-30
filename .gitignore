@@ -4,3 +4,4 @@ pip-log.txt
 pip-delete-this-directory.txt
 lib/
 updateiplocation-*.tar.gz
+.ruff_cache

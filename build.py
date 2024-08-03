@@ -9,6 +9,8 @@ from os import getcwd, path
 from pathlib import Path, PurePath
 from posixpath import join as posixjoin
 from re import search
+from subprocess import check_call
+from sys import executable
 
 APPS_WITH_CERT = ("1-deploymentserver", "1-indexserver", "100_splunkcloud")
 
@@ -77,10 +79,15 @@ def find_ca_cert(dir_arg: Path) -> Path | str:
     return ""
 
 
-def main(directory: Path | str = getcwd(), output: Path | str = getcwd()) -> Path:
+def main(
+    directory: Path | str = getcwd(),
+    output: Path | str = getcwd(),
+    splunk_sdk: bool = False,
+) -> Path:
     """
     :param directory: Path to Splunk app
     :param output: Output folder
+    :param splunk_sdk: Install splunk-sdk library
     """
 
     directory = Path(directory)
@@ -91,6 +98,23 @@ def main(directory: Path | str = getcwd(), output: Path | str = getcwd()) -> Pat
 
     pkg_file = f"{app_name}{get_version(directory)}.tar.gz"
     output_gz = output_dir.joinpath(pkg_file)
+
+    if splunk_sdk is True:
+        lib_path = path.join(directory, "lib")
+        print(f'Installing splunk-sdk into "{lib_path}"...')
+        check_call(
+            [
+                executable,
+                "-m",
+                "pip",
+                "install",
+                "--quiet",
+                "splunk-sdk == 2.*",
+                "-t",
+                lib_path,
+                "--upgrade",
+            ]
+        )
 
     with tarfile.open(output_gz, "w:gz") as tar:
         # arcname: rename directory to app_name
@@ -127,6 +151,12 @@ if __name__ == "__main__":
         help="Output folder. Automatically create one if not found.",
         default=cwd_default,
         type=Path,
+    )
+    parser.add_argument(
+        "--splunk-sdk",
+        "-s",
+        help="Install splunk-sdk library",
+        type="store_true",
     )
 
     args = parser.parse_args()

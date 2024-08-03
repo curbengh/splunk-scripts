@@ -1,0 +1,3 @@
+[]
+access = read : [ admin, sc_admin ], write : [ admin,  sc_admin ]
+export = system

@@ -1,6 +1,14 @@
 # IPlocation Database Update
 
-A simple add-on to update iplocation database. I created this mostly to learn about [credential storage](https://dev.splunk.com/enterprise/docs/developapps/manageknowledge/secretstorage/secretstoragepython). It's probably better to use [Auto Update MaxMind Database](https://splunkbase.splunk.com/app/5482) app instead, though I've never used it.
+An add-on to update iplocation database. I created this mostly to learn about [credential storage](https://dev.splunk.com/enterprise/docs/developapps/manageknowledge/secretstorage/secretstoragepython).
+
+## Splunk Cloud
+
+[`db_path`](#update-database-path) is not configurable on Splunk Cloud.
+
+1. Sign up for a free [MaxMind account](https://www.maxmind.com/en/geolite2/signup).
+2. Download GeoLite2-City.mmdb and extract the gzip.
+3. Upload GeoLite2-City.mmdb to Splunk Cloud through Settings -> Lookups -> GeoIP lookups file.
 
 ## Install
 
@@ -17,6 +25,8 @@ It uses MaxMind license key from the credential storage located at "$SPLUNK_HOME
 
 `updateiplocation` will generate an event for successful update. When creating an alert, you can trigger an action if there is no result to receive a notification for failed update.
 
+### Update database path
+
 Updated database will be stored at "$SPLUNK_HOME/share/GeoLite2-City-**latest**.mmdb". Splunk needs to be configured to use the new database for `iplocation` through [limits.conf](https://docs.splunk.com/Documentation/Splunk/9.0.3/Admin/Limitsconf#.5Biplocation.5D)
 
 ```
@@ -26,7 +36,7 @@ db_path = /opt/splunk/share/GeoLite2-City-latest.mmdb
 # must be an absolute path,
 # "db_path" setting does not support standard Splunk environment variables such as SPLUNK_HOME.
 # Windows
-# db_path = C:\Splunk\share\GeoLite2-City-latest.mmdb
+# db_path = C:\Program Files\Splunk\share\GeoLite2-City-latest.mmdb
 ```
 
 ## [maxmind-license](./maxmind-license.py)

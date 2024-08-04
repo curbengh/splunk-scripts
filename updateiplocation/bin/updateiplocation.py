@@ -58,14 +58,14 @@ class UpdateGeoIP(GeneratingCommand):
         try:
             geolite2 = get(
                 "https://download.maxmind.com/app/geoip_download",
-                params={**params, **{"suffix": "tar.gz"}},
+                params={**params, "suffix": "tar.gz"},
                 timeout=5,
             )
             geolite2.raise_for_status()
 
             geolite2_sha256 = get(
                 "https://download.maxmind.com/app/geoip_download",
-                params={**params, **{"suffix": "tar.gz.sha256"}},
+                params={**params, "suffix": "tar.gz.sha256"},
                 timeout=5,
             )
             geolite2_sha256.raise_for_status()

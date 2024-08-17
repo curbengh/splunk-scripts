@@ -1,4 +1,4 @@
-# Scripts and add-on patches for Splunk
+# Splunk add-ons, patches and setup scripts
 
 ## Packaging Splunk apps
 

@@ -208,10 +208,5 @@
       "comment": ""
     }
   ],
-  "objectNameList": [
-    "Server",
-    "Licenser",
-    "Daily_Usage",
-    "Entitlements"
-  ]
+  "objectNameList": ["Server", "Licenser", "Daily_Usage", "Entitlements"]
 }

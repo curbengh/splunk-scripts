@@ -6,7 +6,7 @@
     {
       "constraints": [
         {
-          "search": "(index=_internal source=*scheduler.log* OR (source=*license_usage.log* type IN (RolloverSummary, Usage))) OR (index=summary source IN (splunk-entitlements, splunk-storage-summary, splunk-ddaa-detail, splunk-ddaa-summary, splunk-fss3-usage))"
+          "search": "(index=_internal source=*scheduler.log* OR (source=*license_usage.log* type IN (RolloverSummary, Usage))) OR (index IN (summary, _cmc_summary) source IN (splunk-entitlements, splunk-storage-summary, splunk-ddaa-detail, splunk-ddaa-summary, splunk-fss3-usage))"
         }
       ],
       "calculations": [],

@@ -14,6 +14,7 @@ This folder contains a collection of configurations needed to collect performanc
 - [windows_table.xml](./windows_table.xml)
 - [linux_chart.xml](./linux_chart.xml)
 - [linux_table.xml](./linux_table.xml)
+- [splunk_usage.xml](./splunk_usage.xml). _Requires [custom](./internal_server.json) data model._
 
 ## Alert
 

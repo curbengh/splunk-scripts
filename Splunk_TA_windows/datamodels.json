@@ -79,5 +79,83 @@
         ]
       }
     ]
+  },
+  {
+    "modelName": "Endpoint",
+    "displayName": "Endpoint",
+    "description": "Endpoint Data Model",
+    "objects": [
+      {
+        "objectName": "Filesystem",
+        "displayName": "Filesystem",
+        "parentName": "BaseSearch",
+        "comment": { "tags": ["endpoint", "filesystem"] },
+        "fields": [
+          {
+            "fieldName": "signature_id",
+            "owner": "Filesystem",
+            "type": "number",
+            "fieldSearch": "",
+            "required": false,
+            "multivalue": false,
+            "hidden": false,
+            "editable": true,
+            "displayName": "signature_id",
+            "comment": ""
+          },
+          {
+            "fieldName": "signature",
+            "owner": "Filesystem",
+            "type": "string",
+            "fieldSearch": "",
+            "required": false,
+            "multivalue": false,
+            "hidden": false,
+            "editable": true,
+            "displayName": "signature",
+            "comment": ""
+          },
+          {
+            "fieldName": "src",
+            "owner": "Filesystem",
+            "type": "string",
+            "fieldSearch": "",
+            "required": false,
+            "multivalue": false,
+            "hidden": false,
+            "editable": true,
+            "displayName": "src",
+            "comment": "The \"remote\" system pertaining to the filesystem activity."
+          }
+        ],
+        "calculations": [
+          {
+            "outputFields": [
+              {
+                "fieldName": "file_target",
+                "owner": "Filesystem",
+                "type": "string",
+                "fieldSearch": "",
+                "required": false,
+                "multivalue": false,
+                "hidden": false,
+                "editable": true,
+                "displayName": "file_target",
+                "comment": {
+                  "description": "Alias of RelativeTargetName of Windows Event 5145.",
+                  "recommended": true
+                }
+              }
+            ],
+            "calculationID": "Endpoint_Filesystem_eval_file_target",
+            "owner": "Filesystem",
+            "editable": true,
+            "comment": "",
+            "calculationType": "Eval",
+            "expression": "RelativeTargetName"
+          }
+        ]
+      }
+    ]
   }
 ]

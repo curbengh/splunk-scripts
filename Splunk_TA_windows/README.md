@@ -20,6 +20,10 @@ The default blacklist for `WinEventLog://Security` (as of 8.8.0) is still incomp
 
 [inputs.conf](./inputs.conf) has been updated to support XML.
 
+## Additional mapping Event 4624, 4776, 4768 to [Authentication](https://docs.splunk.com/Documentation/CIM/latest/User/Authentication) data model
+
+Error code [lookups](./lookups/) and append [those fields](./datamodels.json) to Authentication data model.
+
 ## Build
 
 ```

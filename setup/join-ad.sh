@@ -35,13 +35,20 @@ mkdir "/etc/sudoers.d/"
 cp "sudoers" "/etc/sudoers.d/ad_group"
 echo 'Installed "/etc/sudoers.d/ad_group"'
 
+read -p 'Domain Admin username including @DOMAIN.EXAMPLE in uppercase (enter "n" to skip): ' domain_admin
+if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
+  realm join -v "domain.example" -U "$domain_admin"
+  echo "Joined Example AD domain"
+fi
+
 mkdir "/etc/sssd"
 cp "sssd.conf" "/etc/sssd/sssd.conf"
 systemctl restart sssd.service
 echo 'Installed "/etc/sssd/sssd.conf"'
 
-read -p 'Domain Admin username (enter "n" to skip): ' domain_admin
-if [ -n "$domain_admin" ] && [ "$domain_admin" != "n" ]; then
-  realm join -v "domain.example" -U "$domain_admin"
-  echo "Joined Example AD domain"
+# https://serverfault.com.stackexchange.com/questions/725547/unable-to-create-home-directory-for-ldap-login
+if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] && [ -z $(cat "/etc/pam.d/common-session" | grep "pam_mkhomedir" || [ $? = 1 ])]; then
+  echo "In the next screen, ensure 'Create home directory on login' is selected".
+  sleep 10
+  pam-auth-update
 fi

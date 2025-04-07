@@ -49,7 +49,7 @@ SCRIPT_DIR=$(dirname "$0")
 find "$SCRIPT_DIR" -type f -name 'splunkuf-setup-all-*.tar.gz' | xargs -I _ tar xzf _ -C "$TEMP_DIR"
 
 cd "$TEMP_DIR"
-find "." -type f -name 'splunkforwarder-*-Linux-x86_64.tgz' | xargs -I _ tar xzf _ -C "/opt"
+find "." -type f -name 'splunkforwarder-*-linux-amd64.tgz' | xargs -I _ tar xzf _ -C "/opt"
 tar xzf "1-deploymentserver.tar.gz" -C "$SPLUNK_HOME/etc/apps"
 
 chown -R "$SPLUNK_USER":"$SPLUNK_USER" "$SPLUNK_HOME"

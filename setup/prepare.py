@@ -66,7 +66,7 @@ def glob(pattern: str, out_path: str = "") -> Path | str:
     return glob(pattern, out_path)
 
 
-enterprise_gz = glob("splunk-*-Linux-x86_64.tgz")
+enterprise_gz = glob("splunk-*-linux-amd64.tgz")
 output_gz = path.join(path.dirname(enterprise_gz), "splunk-setup-all.tar.gz")
 host_key = glob("splunk_host_ed25519_key")
 splunk_cert_key = glob("splunk-cert.key", "certs")

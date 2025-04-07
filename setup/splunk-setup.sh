@@ -40,7 +40,7 @@ if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] || [ -n "$IS_UBUNTU_BASE
   usermod --append --groups "adm" "$SPLUNK_USER"
 fi
 
-tar xzf splunk-9*-Linux-x86_64.tgz -C "/opt"
+tar xzf splunk-*-linux-amd64.tgz -C "/opt"
 
 SPLUNK_ETC="$SPLUNK_HOME/etc"
 SPLUNK_SYSTEM="$SPLUNK_ETC/system/local"

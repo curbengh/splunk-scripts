@@ -97,7 +97,7 @@ def build_windows():
 
 
 def build_linux():
-    uf_gz = glob("splunkforwarder-*-Linux-x86_64.tgz")
+    uf_gz = glob("splunkforwarder-*-linux-amd64.tgz")
     uf_version = search(r"splunkforwarder-([^-]+)", uf_gz).group(1)
     output_gz = path.join(
         path.dirname(uf_gz), f"splunkuf-setup-all-{uf_version}-{today}.tar.gz"

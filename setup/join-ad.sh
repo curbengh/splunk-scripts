@@ -47,7 +47,7 @@ systemctl restart sssd.service
 echo 'Installed "/etc/sssd/sssd.conf"'
 
 # https://serverfault.com.stackexchange.com/questions/725547/unable-to-create-home-directory-for-ldap-login
-if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ] && [ -z $(cat "/etc/pam.d/common-session" | grep "pam_mkhomedir" || [ $? = 1 ])]; then
+if ([ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]) && [ -z $(cat "/etc/pam.d/common-session" | grep "pam_mkhomedir" || [ $? = 1 ])]; then
   echo "In the next screen, ensure 'Create home directory on login' is selected".
   sleep 10
   pam-auth-update

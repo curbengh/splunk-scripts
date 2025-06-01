@@ -15,7 +15,7 @@
           <query>
 | tstats summariesonly=true allow_old_summaries=true sum(Server.Licenser.Daily_Usage.gb) AS GB FROM datamodel=Splunk_Internal.Server WHERE index=_internal nodename=Server.Licenser.Daily_Usage BY host, _time span=1d
 | join host type=inner
-  [| tstats summariesonly=true allow_old_summaries=true latest(Server.Licenser.Entitlements.ingest_license) AS Licensed FROM datamodel=Splunk_Internal.Server WHERE earliest=-7h index IN ("summary", "_cmc_summary") nodename=Server.Licenser.Entitlements host="*.splunkcloud.com" BY host]
+  [| tstats summariesonly=true allow_old_summaries=true latest(Server.Licenser.Entitlements.ingest_license) AS Licensed FROM datamodel=Splunk_Internal.Server WHERE index IN ("summary", "_cmc_summary") nodename=Server.Licenser.Entitlements host="*.splunkcloud.com" BY host]
 | eval GB=round(GB,1)
 | fields - host
             </query>

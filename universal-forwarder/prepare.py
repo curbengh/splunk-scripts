@@ -70,7 +70,7 @@ def glob(pattern, out_path="") -> Path | str:
 
 
 def build_windows():
-    uf_msi = glob("splunkforwarder-*-x64-release.msi")
+    uf_msi = glob("splunkforwarder-*-windows-x64.msi")
     uf_version = search(r"splunkforwarder-([^-]+)", uf_msi).group(1)
     out_zip = path.join(
         path.dirname(uf_msi), f"splunkuf-setup-all-{uf_version}-{today}.zip"

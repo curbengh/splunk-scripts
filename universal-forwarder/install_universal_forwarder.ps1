@@ -15,13 +15,13 @@ $argument_list = @(
     "/quiet"
 )
 
-$FILELIST = Get-ChildItem -Path "." -Filter splunkforwarder-*-x64-release.msi
+$FILELIST = Get-ChildItem -Path "." -Filter splunkforwarder-*-windows-x64.msi
 $SPLUNK_MSI = ""
 if ($null -ne $FILELIST) {
     $SPLUNK_MSI = $FILELIST[0] | select-object -expandproperty fullname
 }
 else {
-    write-host "Unable to locate splunkforwarder-*-x64-release.msi in the current folder." -ForegroundColor Red
+    write-host "Unable to locate splunkforwarder-*-windows-x64.msi in the current folder." -ForegroundColor Red
     exit 1
 }
 $argument_list = $argument_list -replace "PATH_TO_MSI", "$SPLUNK_MSI"

@@ -26,6 +26,9 @@ SSSD="sssd-ad sssd-tools realmd adcli"
 if [ "$DISTRO" = "debian" ] || [ -n "$IS_DEBIAN_BASE" ]; then
   apt install -y --no-upgrade $SSSD
 elif [ "$DISTRO" = "fedora" ] || [ -n "$IS_FEDORA_BASE" ]; then
+  if [ "$DISTRO" = "rhel" ]; then
+    SSSD="$SSSD oddjob-mkhomedir"
+  fi
   dnf install --refresh -y $SSSD
 elif [ -n "$IS_SUSE_BASE" ]; then
   zypper install -y $SSSD

@@ -25,3 +25,7 @@ Universal Forwarder setup.
 ## [updateiplocation](./updateiplocation/)
 
 [`iplocation`](https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/Iplocation) bundled database located at "$SPLUNK_HOME/share/GeoLite2-City.mmdb" is only updated in each Splunk release. Use [`updateiplocation`](./updateiplocation/) to manually update it.
+
+## [ad_dashboard](./ad_dashboard/)
+
+Dashboards to search change history of an account or group in Active Directory.

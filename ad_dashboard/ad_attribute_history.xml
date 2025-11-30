@@ -1,0 +1,38 @@
+<form version="1.1">
+  <label>AD Attribute Change History</label>
+  <description>Search change history of an AD attribute</description>
+  <fieldset submitButton="true" autoRun="false">
+    <input type="time" token="time_range" searchWhenChanged="true">
+      <label>Time Range:</label>
+      <default>Last 30 days</default>
+    </input>
+    <input type="text" token="attribute" searchWhenChanged="false">
+      <label>Attribute (e.g. mail):</label>
+      <default>*</default>
+    </input>
+    <input type="text" token="user" searchWhenChanged="false">
+      <label>Username:</label>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <title>Result</title>
+        <search>
+          <query>
+| tstats summariesonly=true allow_old_summaries=true count FROM datamodel=Change.All_Changes WHERE index="windows" nodename=All_Changes.Account_Management.Accounts_Updated All_Changes.result_id=5136 All_Changes.object=$attribute|s$ All_Changes.user=$user|s$ BY All_Changes.Account_Management.src_user, All_Changes.object_attrs, All_Changes.object, All_Changes.user, _time span=1s
+| rename All_Changes.* AS *, Account_Management.* AS *, user AS User, src_user AS Admin, object AS Attribute, object_attrs AS AttributeValue
+| eval Time=strftime(_time, "%Y-%m-%d %H:%M:%S %z")
+| sort -Time
+| table Time, User, Attribute, AttributeValue, Admin
+          </query>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

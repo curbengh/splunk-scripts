@@ -1,0 +1,44 @@
+<form version="1.1">
+  <label>AD Group Change History</label>
+  <description>Search group change history of a user/group</description>
+  <fieldset submitButton="true" autoRun="false">
+    <input type="time" token="time_range" searchWhenChanged="true">
+      <label>Time Range:</label>
+      <default>Last 30 days</default>
+    </input>
+    <input type="text" token="user" searchWhenChanged="false">
+      <label>Username:</label>
+      <default>*</default>
+    </input>
+    <input type="text" token="group" searchWhenChanged="false">
+      <label>Group:</label>
+      <default>*</default>
+    </input>
+    <input type="text" token="admin" searchWhenChanged="false">
+      <label>Admin Username (who made the change?):</label>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <title>Result</title>
+        <search>
+          <query>
+| tstats summariesonly=true allow_old_summaries=true count AS event_count FROM datamodel=Change.All_Changes WHERE index="windows" nodename=All_Changes.Account_Management.Accounts_Updated All_Changes.result_id IN (4728, 4729, 4732, 4733, 4746, 4747, 4751, 4752, 4756, 4757, 4761, 4762) All_Changes.object=$user|s$ All_Changes.object_attrs=$group|s$ All_Changes.Account_Management.src_user=$admin|s$ BY host, All_Changes.Account_Management.dest_nt_domain, All_Changes.Account_Management.src_user, All_Changes.object_attrs, All_Changes.result_id, All_Changes.result, _time span=1s
+| rename All_Changes.Account_Management.* AS *, All_Changes.* AS *, dest_nt_domain AS Domain, src_user AS Admin, result_id AS EventCode, result AS EventName, object_attrs AS Group
+| eval Time=strftime(_time, "%Y-%m-%d %H:%M:%S %z"), admin_lookup=replace(Admin,"^([a-zA-Z]{5})\d0$","\1")
+| lookup ad_users sAMAccountName AS admin_lookup OUTPUT displayName AS adminName
+| eval adminName=mvindex(adminName, 0)
+| sort -Time
+| table Time, Domain, EventCode, EventName, Admin, adminName, Group
+          </query>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

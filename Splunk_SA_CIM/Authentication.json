@@ -1,0 +1,40 @@
+{
+  "modelName": "Authentication",
+  "displayName": "Authentication",
+  "description": "Authentication Data Model",
+  "objects": [
+    {
+      "objectName": "Authentication",
+      "displayName": "Authentication",
+      "parentName": "BaseEvent",
+      "comment": { "tags": ["authentication"] },
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "src_ip",
+              "owner": "Authentication",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "src_ip",
+              "comment": {
+                "description": "The source IP involved in the authentication.",
+                "recommended": true
+              }
+            }
+          ],
+          "calculationID": "Authentication_fillnull_src_ip",
+          "owner": "Authentication",
+          "editable": true,
+          "comment": "Transform IPv4-mapped IPv6 address to IPv4 address",
+          "calculationType": "Eval",
+          "expression": "if(isnull(src_ip) OR src_ip=\"\", \"unknown\", replace(src_ip, \"^::ffff:\", \"\"))"
+        }
+      ]
+    }
+  ]
+}

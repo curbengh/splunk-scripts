@@ -1,0 +1,40 @@
+{
+  "modelName": "Change",
+  "displayName": "Change",
+  "description": "Change Data Model",
+  "objects": [
+    {
+      "objectName": "All_Changes",
+      "displayName": "All Changes",
+      "parentName": "BaseEvent",
+      "comment": { "tags": ["change"] },
+      "calculations": [
+        {
+          "outputFields": [
+            {
+              "fieldName": "src_ip",
+              "owner": "All_Changes",
+              "type": "string",
+              "fieldSearch": "",
+              "required": false,
+              "multivalue": false,
+              "hidden": false,
+              "editable": true,
+              "displayName": "src_ip",
+              "comment": {
+                "description": "The IP address where the change was originated.",
+                "recommended": true
+              }
+            }
+          ],
+          "calculationID": "All_Changes_fillnull_src_ip",
+          "owner": "All_Changes",
+          "editable": true,
+          "comment": "Transform IPv4-mapped IPv6 address to IPv4 address",
+          "calculationType": "Eval",
+          "expression": "if(isnull(src_ip) OR src=\"\", \"unknown\", replace(src_ip, \"^::ffff:\", \"\"))"
+        }
+      ]
+    }
+  ]
+}

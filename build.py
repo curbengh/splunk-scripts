@@ -121,7 +121,7 @@ def main(
         tar.add(directory, arcname=app_name, filter=exclusion)
         # only certain apps need ca-certificates.crt
         ca_cert = find_ca_cert(directory)
-        if app_name in APPS_WITH_CERT and len(ca_cert) >= 1:
+        if app_name in APPS_WITH_CERT and isinstance(ca_cert, Path):
             tar.add(
                 ca_cert,
                 arcname=path.join(app_name, "local", "ca-certificates.crt"),

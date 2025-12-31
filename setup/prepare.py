@@ -74,7 +74,7 @@ splunk_cert_web_pem = glob("splunk-cert-web.pem", "certs")
 deployment_apps = ["1-deploymentserver", "1-indexserver", "100_splunkcloud"]
 
 with TemporaryDirectory() as tmpdir:
-    built_apps = {}
+    built_apps: set[Path] = set()
     for app in deployment_apps:
         app_path = path.join("..", "deployment-apps", app)
         if path.isdir(app_path):

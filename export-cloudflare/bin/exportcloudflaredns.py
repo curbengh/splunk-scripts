@@ -51,11 +51,7 @@ class ExportCloudflareDNS(GeneratingCommand):
         )
         server_conf = ConfigParser()
         server_conf.read(server_conf_path)
-        proxy_config = (
-            server_conf["proxyConfig"]
-            if "proxyConfig" in server_conf.sections()
-            else {}
-        )
+        proxy_config = server_conf["proxyConfig"] if "proxyConfig" in server_conf.sections() else {}
         proxy_rules = proxy_config.get("proxy_rules", "")
         no_proxy_rules = proxy_config.get("no_proxy", "")
         http_proxy = proxy_config.get("http_proxy", "")
@@ -68,10 +64,7 @@ class ExportCloudflareDNS(GeneratingCommand):
             # hostname should not be excluded by no_proxy
             and hostname not in no_proxy_rules
             # if proxy_rules is set, should include hostname
-            and (
-                len(proxy_rules) == 0
-                or (len(proxy_rules) >= 1 and hostname in proxy_rules)
-            )
+            and (len(proxy_rules) == 0 or (len(proxy_rules) >= 1 and hostname in proxy_rules))
         ):
             return {"proxies": {"http": http_proxy, "https": https_proxy}}
 
@@ -95,9 +88,7 @@ class ExportCloudflareDNS(GeneratingCommand):
         proxy_config = self.__get_proxy(url)
 
         try:
-            res = requests.get(
-                url, headers=headers, params=params, timeout=5, **proxy_config
-            )
+            res = requests.get(url, headers=headers, params=params, timeout=5, **proxy_config)
             # pylint: disable=no-member
             if res.status_code == requests.codes.ok:
                 if is_json is True:
@@ -115,9 +106,7 @@ class ExportCloudflareDNS(GeneratingCommand):
         except requests.exceptions.RequestException as err:
             raise err
 
-    def __list_zones(
-        self, headers: dict = {}, result: list[dict] = [], page: int = 1
-    ) -> list[dict]:
+    def __list_zones(self, headers: dict = {}, result: list[dict] = [], page: int = 1) -> list[dict]:
         """List all zones"""
 
         params = {
@@ -136,9 +125,7 @@ class ExportCloudflareDNS(GeneratingCommand):
     def __export_dns(self, headers: dict, zone_id: str) -> str:
         """Export BIND config of a DNS zone"""
 
-        dns_records = self.__get(
-            f"/zones/{zone_id}/dns_records/export", headers=headers
-        )
+        dns_records = self.__get(f"/zones/{zone_id}/dns_records/export", headers=headers)
 
         return dns_records
 
@@ -153,15 +140,9 @@ class ExportCloudflareDNS(GeneratingCommand):
             modified_on = (
                 # Z suffix is only supported in Python >=3.11
                 # https://docs.python.org/3/library/datetime.html#datetime.datetime.fromisoformat
-                datetime.fromisoformat(zone["modified_on"][0:-1])
-                .replace(tzinfo=timezone.utc)
-                .timestamp()
+                datetime.fromisoformat(zone["modified_on"][0:-1]).replace(tzinfo=timezone.utc).timestamp()
             )
-            created_on = (
-                datetime.fromisoformat(zone["created_on"][0:-1])
-                .replace(tzinfo=timezone.utc)
-                .timestamp()
-            )
+            created_on = datetime.fromisoformat(zone["created_on"][0:-1]).replace(tzinfo=timezone.utc).timestamp()
 
             yield self.gen_record(
                 _time=unix_time(),

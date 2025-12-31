@@ -51,8 +51,7 @@ def glob(pattern: str, out_path: str = "") -> Path | str:
         return filelist[0]
 
     if path.isfile(out_path) and (
-        len(pattern_ext) <= 0
-        or (len(pattern_ext) >= 1 and PurePath(out_path).suffix == pattern_ext)
+        len(pattern_ext) <= 0 or (len(pattern_ext) >= 1 and PurePath(out_path).suffix == pattern_ext)
     ):
         return out_path
 

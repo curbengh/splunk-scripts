@@ -54,8 +54,7 @@ def glob(pattern, out_path="") -> Path | str:
         return filelist[0]
 
     if path.isfile(out_path) and (
-        len(pattern_ext) <= 0
-        or (len(pattern_ext) >= 1 and PurePath(out_path).suffix == pattern_ext)
+        len(pattern_ext) <= 0 or (len(pattern_ext) >= 1 and PurePath(out_path).suffix == pattern_ext)
     ):
         return out_path
 
@@ -72,9 +71,7 @@ def glob(pattern, out_path="") -> Path | str:
 def build_windows():
     uf_msi = glob("splunkforwarder-*-windows-x64.msi")
     uf_version = search(r"splunkforwarder-([^-]+)", uf_msi).group(1)
-    out_zip = path.join(
-        path.dirname(uf_msi), f"splunkuf-setup-all-{uf_version}-{today}.zip"
-    )
+    out_zip = path.join(path.dirname(uf_msi), f"splunkuf-setup-all-{uf_version}-{today}.zip")
     print(f"Preparing {path.basename(out_zip)}...")
     with ZipFile(out_zip, "w") as zip:
         zip.write("install_universal_forwarder.ps1")
@@ -90,18 +87,14 @@ def build_windows():
         print('Included "ca-certificates.crt"')
 
     print(f"Created {out_zip}")
-    print(
-        f"\nTo install Universal Forwarder, copy {path.basename(out_zip)} to the device."
-    )
+    print(f"\nTo install Universal Forwarder, copy {path.basename(out_zip)} to the device.")
     print("Unzip it and run install_universal_forwarder.ps1")
 
 
 def build_linux():
     uf_gz = glob("splunkforwarder-*-linux-amd64.tgz")
     uf_version = search(r"splunkforwarder-([^-]+)", uf_gz).group(1)
-    output_gz = path.join(
-        path.dirname(uf_gz), f"splunkuf-setup-all-{uf_version}-{today}.tar.gz"
-    )
+    output_gz = path.join(path.dirname(uf_gz), f"splunkuf-setup-all-{uf_version}-{today}.tar.gz")
     with TemporaryDirectory() as tmpdir:
         deploymentserver = build_app(
             # see ../setup/README.md#deployment-apps
@@ -121,9 +114,7 @@ def build_linux():
             print(f'Included "{path.basename(uf_gz)}"')
 
     print(f'Created "{output_gz}"')
-    print(
-        f"\nTo install Universal Forwarder, {path.basename(output_gz)} to the device."
-    )
+    print(f"\nTo install Universal Forwarder, {path.basename(output_gz)} to the device.")
     print("Then execute the shell script as root.")
 
 

@@ -87,9 +87,7 @@ def main(input: str = ""):
         print(f'Extracted "{app_gz}" to "{app_out_dir}"')
 
         r_str = ""
-        f_path = path.join(
-            app_out_dir, "bin", "packages", "app", "formatting_extensions.py"
-        )
+        f_path = path.join(app_out_dir, "bin", "packages", "app", "formatting_extensions.py")
         with open(f_path, encoding="utf-8") as r:
             r_str = r.read()
         with open(f_path, "w", encoding="utf-8") as w:

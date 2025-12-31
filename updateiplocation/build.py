@@ -23,11 +23,7 @@ def version() -> str:
             environ.get("CI_COMMIT_TAG")
             or environ.get("CI_COMMIT_SHORT_SHA")
             # github
-            or (
-                environ.get("GITHUB_REF_NAME")
-                if environ.get("GITHUB_REF_TYPE") == "tag"
-                else None
-            )
+            or (environ.get("GITHUB_REF_NAME") if environ.get("GITHUB_REF_TYPE") == "tag" else None)
             or environ.get("GITHUB_SHA", "")[0:8]
         )
         if environ.get("CI") == "true"

@@ -45,9 +45,7 @@ class UpdateGeoIP(GeneratingCommand):
                 # Custom path needs to be specified in $SPLUNK_HOME/etc/system/local/limits.conf
                 tarinfo.name = "GeoLite2-City-latest.mmdb"
                 return tarinfo
-        raise FileNotFoundError(
-            "Unable to locate any mmdb file in the downloaded gzip."
-        )
+        raise FileNotFoundError("Unable to locate any mmdb file in the downloaded gzip.")
 
     def __download(self) -> Response.content:
         """Download GeoLite2-City.tar.gz and return its binary content"""

@@ -101,9 +101,7 @@ def login(
     password = getpass("Password: ")
 
     try:
-        service = client.connect(
-            username=username, password=password, **login_params, **NAMESPACE
-        )
+        service = client.connect(username=username, password=password, **login_params, **NAMESPACE)
         print("Successfully login.")
         return service
     except gaierror as err:
@@ -114,9 +112,7 @@ def login(
     except ConnectionResetError:
         print("Encountered ConnectionResetError")
         if login_params["scheme"] != "https":
-            print(
-                "Splunk management port 8089 uses https by default and may not respond to http"
-            )
+            print("Splunk management port 8089 uses https by default and may not respond to http")
         login(**login_params)
     except ConnectionRefusedError:
         print("Encountered ConnectionResetError")
@@ -170,10 +166,7 @@ def add_license(
             print("Existing license key found.")
             if always_update:
                 print("--update option specified, proceed to delete existing key...")
-            is_replace = (
-                always_update
-                or input("Do you wish to update it? [y/n] ").lower() == "y"
-            )
+            is_replace = always_update or input("Do you wish to update it? [y/n] ").lower() == "y"
             if is_replace:
                 delete_license(service)
                 add_license(service, license_key, validate)
@@ -186,9 +179,7 @@ def add_license(
             "updateiplocation",
             "passwords.conf",
         )
-        print(
-            f"The encrypted password can be found in the `[credential::maxmind:]` stanza of {pwd_conf}"
-        )
+        print(f"The encrypted password can be found in the `[credential::maxmind:]` stanza of {pwd_conf}")
 
 
 def delete_license(service: Service):
@@ -295,20 +286,14 @@ if __name__ == "__main__":
         help="Verify TLS verification for https connections.",
         action="store_true",
     )
-    parser.add_argument(
-        "--check-key", "-k", help="Validate an input license key.", action="store_true"
-    )
+    parser.add_argument("--check-key", "-k", help="Validate an input license key.", action="store_true")
     parser.add_argument(
         "--skip-validate",
         "-s",
         help="Skip validating a license key before storing it.",
         action="store_true",
     )
-    parser.add_argument(
-        "--update", "-y", help="Always replace license key.", action="store_true"
-    )
-    parser.add_argument(
-        "--delete", "-d", help="Delete existing license key.", action="store_true"
-    )
+    parser.add_argument("--update", "-y", help="Always replace license key.", action="store_true")
+    parser.add_argument("--delete", "-d", help="Delete existing license key.", action="store_true")
 
     main(**vars(parser.parse_args()))

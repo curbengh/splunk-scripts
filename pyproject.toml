@@ -1,5 +1,8 @@
 [tool.ruff]
 line-length = 115
 
+[tool.ruff.lint]
+extend-select = ["I"]
+
 [tool.ruff.lint.per-file-ignores]
 "updateiplocation/bin/updateiplocation.py" = ["E402"]

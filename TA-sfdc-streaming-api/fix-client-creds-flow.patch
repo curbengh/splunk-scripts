@@ -1,0 +1,11 @@
+--- a/TA-sfdc-streaming-api/lib/aiosfstream/auth.py
++++ b/TA-sfdc-streaming-api/lib/aiosfstream/auth.py
+@@ -178,7 +178,7 @@ class PasswordAuthenticator(AuthenticatorBase):
+     async def _authenticate(self) -> Tuple[int, JsonObject]:
+         async with ClientSession(json_serialize=self.json_dumps) as session:
+             data = {
+-                "grant_type": "password",
++                "grant_type": "client_credentials",
+                 "client_id": self.client_id,
+                 "client_secret": self.client_secret,
+                 "username": self.username,

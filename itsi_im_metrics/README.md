@@ -15,6 +15,7 @@ This folder contains a collection of configurations needed to collect performanc
 - [linux_chart.xml](./linux_chart.xml)
 - [linux_table.xml](./linux_table.xml)
 - [splunk_usage.xml](./splunk_usage.xml). _Requires [custom](./internal_server.json) data model._
+- [splunk_cpu.xml](./splunk_cpu.xml). Based on "Index CPU blood suckers" dashboard provided by a Splunk sales engineer. I took the liberty to replace the use of "\_introspection" index with `mstats` + "\_metrics" index for faster query. Can be used independently without ITSI nor [metrics collection](#collect-metrics).
 
 ## Alert
 

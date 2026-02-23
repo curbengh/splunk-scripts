@@ -42,6 +42,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.process_type span=1s
 | timechart span=$span$ sum(normalized_pct_cpu) AS cpu BY data.process_type</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -86,6 +88,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.app span=1s
 | timechart limit=25 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.app</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -130,6 +134,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.search_head span=1s
 | timechart limit=20 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.search_head</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -174,6 +180,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" data.search_props.type="datamodel*" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.label span=1s
 | timechart limit=20 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.label</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -313,6 +321,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" data.search_props.type="report*acceleration" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.label span=1s
 | timechart limit=20 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.label</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -357,6 +367,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" data.search_props.type="ad-hoc" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.provenance span=1s
 | timechart limit=20 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.provenance</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -401,6 +413,8 @@
         <search base="base">
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" data.search_props.type="ad-hoc" metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.user span=1s
 | timechart limit=30 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.user</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -465,6 +479,8 @@
         <search>
           <query>| mstats fillnull_value="NULL" sum(_value) AS normalized_pct_cpu WHERE index=_metrics component=PerProcess data.process_type="search" data.search_props.type IN ("scheduled", "summary index") metric_name="spl.intr.resource_usage.PerProcess.data.normalized_pct_cpu" BY data.search_props.label span=1s
 | timechart limit=20 span=$span$ sum(normalized_pct_cpu) AS cpu BY data.search_props.label</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>

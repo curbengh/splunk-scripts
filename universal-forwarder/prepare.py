@@ -58,7 +58,7 @@ def glob(pattern, out_path="") -> Path | str:
     ):
         return out_path
 
-    out_path = path.abspath(Path(input(f"Path to {pattern}: ")))
+    out_path = path.abspath(Path(sub(r"^'|'$", "", input(f"Path to {pattern}: "))))
 
     if not path.isfile(out_path):
         print(f'"{out_path}" is not a file or does not exist.')
@@ -70,7 +70,7 @@ def glob(pattern, out_path="") -> Path | str:
 
 def build_windows():
     uf_msi = glob("splunkforwarder-*-windows-x64.msi")
-    uf_version = search(r"splunkforwarder-([^-]+)", uf_msi).group(1)
+    uf_version = search(r"splunkforwarder-([^-]+)", str(uf_msi)).group(1)
     out_zip = path.join(path.dirname(uf_msi), f"splunkuf-setup-all-{uf_version}-{today}.zip")
     print(f"Preparing {path.basename(out_zip)}...")
     with ZipFile(out_zip, "w") as zip:
@@ -93,7 +93,7 @@ def build_windows():
 
 def build_linux():
     uf_gz = glob("splunkforwarder-*-linux-amd64.tgz")
-    uf_version = search(r"splunkforwarder-([^-]+)", uf_gz).group(1)
+    uf_version = search(r"splunkforwarder-([^-]+)", str(uf_gz)).group(1)
     output_gz = path.join(path.dirname(uf_gz), f"splunkuf-setup-all-{uf_version}-{today}.tar.gz")
     with TemporaryDirectory() as tmpdir:
         deploymentserver = build_app(

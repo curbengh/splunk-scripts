@@ -5,7 +5,7 @@
 import tarfile
 from os import chdir, path
 from pathlib import Path, PurePath
-from re import search
+from re import search, sub
 from tempfile import TemporaryDirectory
 
 from build import main as build_app
@@ -55,7 +55,7 @@ def glob(pattern: str, out_path: str = "") -> Path | str:
     ):
         return out_path
 
-    out_path = path.abspath(Path(input(f"Path to {pattern}: ")))
+    out_path = path.abspath(Path(sub(r"^'|'$", "", input(f"Path to {pattern}: "))))
 
     if not path.isfile(out_path):
         print(f'"{out_path}" is not a file or does not exist.')

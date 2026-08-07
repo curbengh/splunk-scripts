@@ -33,7 +33,7 @@ NAMESPACE = {
 def main(
     host: str = "https://localhost:8089",
     verify: bool = False,
-    skip_validate: bool = False,
+    skip_verify: bool = False,
     check_key: bool = False,
     delete: bool = False,
     update: bool = False,
@@ -41,7 +41,7 @@ def main(
     """
     :param host: Splunk management endpoint
     :param verify: Verify TLS verification for https connections
-    :param skip_validate: Skip validating the api key before storing it
+    :param skip_verify: Skip validating the api key before storing it
     :param check_key: Validate an input api key
     :param delete: Delete existing api key
     :param update: Always replace api key
@@ -55,7 +55,7 @@ def main(
         "verify": verify,
     }
 
-    validate: bool = not skip_validate
+    validate: bool = not skip_verify
     always_update: bool = update
 
     if check_key:
@@ -64,7 +64,7 @@ def main(
             is_add_key = input("Do you wish to save it? [y/n] ")
             if is_add_key.lower() == "y":
                 # is_valid_key already validated the key
-                main(skip_validate=True)
+                main(skip_verify=True)
         print("Nothing to do.")
         sys_exit()
     elif delete:
@@ -183,12 +183,9 @@ def delete_key(service: Service):
 
 
 def prompt_key(api_key: str = "") -> str:
-    """Prompt for api key if no argument or invalid key format"""
-    if not (isinstance(api_key, str) and len(api_key) == 40):
-        if len(api_key) >= 1:
-            print("Invalid api key format.")
+    """Prompt for api key if no argument"""
+    if len(api_key) == 0:
         api_key = input("API Key: ").strip()
-        prompt_key(api_key)
     return api_key
 
 
@@ -275,11 +272,11 @@ if __name__ == "__main__":
         help="Verify TLS verification for https connections.",
         action="store_true",
     )
-    parser.add_argument("--check-key", "-k", help="Validate an input api key.", action="store_true")
+    parser.add_argument("--check-key", "-k", help="Verify an input api key.", action="store_true")
     parser.add_argument(
-        "--skip-validate",
+        "--skip-verify",
         "-s",
-        help="Skip validating the api key before storing it.",
+        help="Skip verifying the api key before storing it.",
         action="store_true",
     )
     parser.add_argument("--update", "-y", help="Always replace api key.", action="store_true")

@@ -14,10 +14,10 @@ _[Install](#install) the addon before running this._
 
 Query/add/update Cloudflare api key to the credential storage. The [API token](https://dash.cloudflare.com/profile/api-tokens) should have `Zone.Zone.Read` and `Zone.DNS.Read` permissions with IP restriction (if applicable).
 
-API key will be validated prior to addition if api.cloudflare.com is reachable unless `--skip-validate` is specified.
+API key will be validated prior to addition if api.cloudflare.com is reachable unless `--skip-verify` is specified.
 
 ```
-cloudflare-api-key.py [--host] https://localhost:8089 [--verify] [--check-key] [--skip-validate] [--update] [--delete]
+cloudflare-api-key.py [--host] https://localhost:8089 [--verify] [--check-key] [--skip-verify] [--update] [--delete]
 ```
 
 Options:
@@ -25,8 +25,8 @@ Options:
 - **host**: Splunk management endpoint. (default: https://localhost:8089)
 - **verify**: Verify TLS verification for https connections. (default: False)
 - **check-key**: Check key validity using [`user/tokens/verify`](https://api.cloudflare.com/client/v4/user/tokens/verify) endpoint, without checking for permissions. If it is valid, ask if want to save it. Other options have no effect.
-- **skip-validate**: Skip validating api key when adding/updating a license key. Key check is automatically skipped if api.cloudflare.com is unreachable.
-- **update**: Add api key even if there is an existing api key.
+- **skip-verify**: Skip verifying api key when adding/updating. Verification is automatically skipped if api.cloudflare.com is unreachable.
+- **update**: Add api key and replace existing one if exist without confirmation prompt.
 - **delete**: Delete existing api key from the credential storage, regardless the key exists or not.
 
 Example:
